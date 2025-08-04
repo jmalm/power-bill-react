@@ -1,0 +1,118 @@
+import { PriceModel, PowerTariff, NightReduction } from "../models";
+import { UsageRow } from "./csv";
+
+interface TopHoursResult {
+  [tariffName: string]: number; // average power for the N highest hours
+}
+
+function isWithinNightReduction(hour: number, reduction?: NightReduction) {
+  if (!reduction) return false;
+  const start = parseTimeString(reduction.startTime);
+  const end = parseTimeString(reduction.endTime);
+  if (start === undefined || end === undefined) return false;
+  if (start <= end) {
+    return hour >= start && hour < end;
+  } else {
+    // Overnight (e.g., 22-6)
+    return hour >= start || hour < end;
+  }
+}
+
+function parseTimeString(time: string | undefined): number | undefined {
+  if (!time) return undefined;
+  const [h, m] = time.split(":").map(Number);
+  return h + (m || 0) / 60;
+}
+
+function isWithinTariffMonth(date: Date, tariff: PowerTariff): boolean {
+  if (!tariff.months || tariff.months.length === 0) return true;
+  return tariff.months.includes(date.getMonth() + 1); // JS months: 0-11, your config: 1-12
+}
+
+function isWithinTariffTime(hour: number, tariff: PowerTariff): boolean {
+  if (!tariff.startTime || !tariff.endTime) return true;
+  const start = parseTimeString(tariff.startTime) ?? 0;
+  const end = parseTimeString(tariff.endTime) ?? 24;
+  // If end < start, treat as overnight
+  if (start < end) {
+    return hour >= start && hour < end;
+  } else {
+    return hour >= start || hour < end;
+  }
+}
+
+function groupUsageByDayHour(usageData: UsageRow[]) {
+  const usageByDayHour: { [date: string]: { [hour: number]: number } } = {};
+  usageData.forEach(({ datetime, usage }) => {
+    const dateObj = new Date(datetime);
+    if (isNaN(dateObj.getTime())) return;
+    const day = dateObj.toISOString().slice(0, 10); // YYYY-MM-DD
+    const hour = dateObj.getHours();
+    if (!usageByDayHour[day]) usageByDayHour[day] = {};
+    usageByDayHour[day][hour] = (usageByDayHour[day][hour] || 0) + usage;
+  });
+  return usageByDayHour;
+}
+
+function getTopHourPerDay(
+  usageByDayHour: { [hour: number]: number },
+  day: string,
+  tariff: PowerTariff
+): number {
+  let topUsage = -Infinity;
+  for (let hour = 0; hour < 24; hour++) {
+    // Only consider hours within the tariff's time window
+    if (!isWithinTariffTime(hour, tariff)) continue;
+    let usage = usageByDayHour[hour] || 0;
+    // Night reduction if needed (optional, not in your prompt)
+    if (
+      tariff.nightReduction &&
+      isWithinNightReduction(hour, tariff.nightReduction)
+    ) {
+      usage *= tariff.nightReduction.factor;
+    }
+    if (usage > topUsage) {
+      topUsage = usage;
+    }
+  }
+  return topUsage > -Infinity ? topUsage : 0;
+}
+
+function getAllTopHoursForTariff(
+  usageByDayHour: { [date: string]: { [hour: number]: number } },
+  tariff: PowerTariff
+): number[] {
+  const topHours: number[] = [];
+  for (const day in usageByDayHour) {
+    const dateObj = new Date(day);
+    if (!isWithinTariffMonth(dateObj, tariff)) continue;
+    const topHour = getTopHourPerDay(usageByDayHour[day], day, tariff);
+    topHours.push(topHour);
+  }
+  return topHours;
+}
+
+function getAverageOfTopN(hours: number[], n: number): number {
+  const sorted = [...hours].sort((a, b) => b - a);
+  const topN = sorted.slice(0, n);
+  if (topN.length === 0) return 0;
+  return topN.reduce((sum, val) => sum + val, 0) / topN.length;
+}
+
+export function calculateTopHoursPerTariff(
+  usageData: UsageRow[],
+  model: PriceModel
+): TopHoursResult {
+  if (!usageData.length) return {};
+
+  const usageByDayHour = groupUsageByDayHour(usageData);
+  const result: TopHoursResult = {};
+
+  for (const tariff of model.powerTariffs) {
+    const allTopHours = getAllTopHoursForTariff(usageByDayHour, tariff);
+    const avg = getAverageOfTopN(allTopHours, tariff.numberOfTopPeaksToAverage);
+    result[tariff.name] = avg;
+  }
+
+  return result;
+}

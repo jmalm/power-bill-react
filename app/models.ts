@@ -17,8 +17,8 @@ export interface PowerTariff {
   feePerKW: number;
   numberOfTopPeaksToAverage: number;
   months: number[];
-  startTime: number;
-  endTime: number;
+  startTime: string;
+  endTime: string;
   nightReduction?: NightReduction;
 }
 
@@ -38,7 +38,7 @@ export enum Month {
 }
 
 export interface NightReduction {
-  startTime: number;
-  endTime: number;
+  startTime: string;
+  endTime: string;
   factor: number;
 }

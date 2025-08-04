@@ -10,11 +10,13 @@ export function parseUsageCsv(text: string): UsageRow[] {
     // Skip empty lines
     if (!line.trim()) continue;
     // Match datetime;usage (e.g., 2024-01-01T00:00;1.23)
-    const match = line.match(/^([^;]+);([\d.,]+)$/);
+    // Empty usage is treated as 0
+    // Allow comma as decimal separator
+    const match = line.match(/^([^;]+);([\d.,]*)$/);
     if (match) {
       // Replace comma with dot for decimal separator
       const usageStr = match[2].replace(',', '.');
-      data.push({ datetime: match[1], usage: parseFloat(usageStr) });
+      data.push({ datetime: match[1], usage: parseFloat(usageStr || "0") });
     }
   }
   return data;

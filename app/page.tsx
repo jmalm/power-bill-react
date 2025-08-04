@@ -9,6 +9,7 @@ import { loadPriceModels } from "./utils/priceModelLoader";
 import { downloadJson } from "./utils/downloadJson";
 import CostBreakdown from "./components/CostBreakdown";
 import { handleCsvUpload, UsageRow } from "./utils/csv";
+import { calculateTopHoursPerTariff } from "./utils/topHours";
 
 export default function Home() {
   const [selectedModel, setSelectedModel] = useState("custom");
@@ -34,6 +35,12 @@ export default function Home() {
 
   // Calculate total usage from the loaded data
   const totalUsage = usageData.reduce((sum, row) => sum + row.usage, 0);
+
+  // Calculate top hours per tariff for CostBreakdown
+  const topHours =
+    selected && usageData.length
+      ? calculateTopHoursPerTariff(usageData, selected)
+      : {};
 
   return (
     <main className="flex min-h-screen flex-col items-center p-24">
@@ -90,7 +97,8 @@ export default function Home() {
           />
           {usageData.length > 0 && (
             <div className="mt-2 text-sm text-green-400">
-              Loaded {usageData.length} usage rows. Total: {totalUsage.toFixed(2)} kWh
+              Loaded {usageData.length} usage rows. Total:{" "}
+              {totalUsage.toFixed(2)} kWh
             </div>
           )}
         </div>
@@ -99,7 +107,7 @@ export default function Home() {
           <CostBreakdown
             model={selected}
             totalUsage={totalUsage}
-            topHours={{ Baslast: 4.2, Höglast: 3.5 }}
+            topHours={topHours}
           />
         )}
       </div>

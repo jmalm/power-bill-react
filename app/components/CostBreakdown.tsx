@@ -67,7 +67,7 @@ export default function CostBreakdown({
       </div>
       {powerTariffRows.map((row) => (
         <div className="mb-2" key={row.name}>
-          {row.name} ({row.avgTop} kW × {row.feePerKW} {model.currency}/kW):{" "}
+          {row.name} ({row.avgTop.toFixed(2)} kW × {row.feePerKW} {model.currency}/kW):{" "}
           <span className="float-right">
             {row.fee.toFixed(2)} {model.currency}
           </span>
