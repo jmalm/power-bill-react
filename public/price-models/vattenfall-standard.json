@@ -1,0 +1,19 @@
+{
+  "name": "Vattenfall Standard",
+  "currency": "SEK",
+  "vat_rate": 0.25,
+  "prices_include_tax": true,
+  "fixed_fee_per_month": 295.0,
+  "usage_fee_per_kwh": 0.0598,
+  "usage_tax_per_kwh": 0.5488,
+  "power_tariffs": [
+    {
+      "name": "Effect Tariff",
+      "fee_per_kw": 45.5,
+      "number_of_top_peaks_to_average": 3,
+      "months": [11, 12, 1, 2, 3],
+      "start_time": "06:00",
+      "end_time": "22:00"
+    }
+  ]
+}
