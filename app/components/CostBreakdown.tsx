@@ -59,7 +59,7 @@ export default function CostBreakdown({
         </span>
       </div>
       <div className="mb-2">
-        Usage fee ({totalUsage} kWh × {model.usageFeePerKWh} {model.currency}
+        Usage fee ({totalUsage.toFixed(2)} kWh × {model.usageFeePerKWh} {model.currency}
         /kWh):{" "}
         <span className="float-right">
           {usageFee.toFixed(2)} {model.currency}
@@ -74,7 +74,7 @@ export default function CostBreakdown({
         </div>
       ))}
       <div className="mb-2">
-        Electricity tax ({totalUsage} kWh × {model.usageTaxPerKWh}{" "}
+        Electricity tax ({totalUsage.toFixed(2)} kWh × {model.usageTaxPerKWh}{" "}
         {model.currency}/kWh):{" "}
         <span className="float-right">
           {usageTax.toFixed(2)} {model.currency}
