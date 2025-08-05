@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "test": "jest",
-    "deploy": "next build && gh-pages -d out"
+    "deploy": "cross-env NODE_ENV=production NEXT_PUBLIC_BASE_PATH=/power-bill-react next build && gh-pages -d out --nojekyll"
   },
   "dependencies": {
     "next": "15.4.5",
@@ -22,6 +22,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "cross-env": "^10.0.0",
     "gh-pages": "^6.3.0",
     "jest": "^30.0.5",
     "tailwindcss": "^4",

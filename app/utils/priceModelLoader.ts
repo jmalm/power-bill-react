@@ -1,4 +1,6 @@
+import { usePathname } from "next/navigation";
 import { PriceModel, PowerTariff } from "../models";
+import { useRouter } from "next/router";
 
 export function mapPriceModel(json: any): PriceModel {
   return {
@@ -25,13 +27,15 @@ function mapPowerTariff(json: any): PowerTariff {
 }
 
 export async function loadPriceModels(): Promise<PriceModel[]> {
-  const indexRes = await fetch("/price-models/models-index.json");
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+  // const basePath = '';
+  const indexRes = await fetch(`${basePath}/price-models/models-index.json`);
   const indexData = await indexRes.json();
   const files: string[] = indexData.models;
 
   const models = await Promise.all(
     files.map(async (file) => {
-      const res = await fetch(`/price-models/${file}`);
+      const res = await fetch(`${basePath}/price-models/${file}`);
       const json = await res.json();
       return mapPriceModel(json);
     })
