@@ -1,6 +1,6 @@
 import { PriceModel, PowerTariff } from "../models";
 
-function mapPriceModel(json: any): PriceModel {
+export function mapPriceModel(json: any): PriceModel {
   return {
     name: json.name,
     currency: json.currency,
