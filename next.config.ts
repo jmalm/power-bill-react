@@ -16,7 +16,7 @@ const nextConfig: NextConfig = {
   // Optional: This is crucial for correctly loading assets (JS, CSS, images)
   // when your site is hosted on a subpath like GitHub Pages.
   // It ensures that paths to these assets are prefixed correctly.
-  assetPrefix: isProd ? '/power-bill-react/' : '', // <-- IMPORTANT: Replace 'power-bill-react' with your GitHub repository name
+  // assetPrefix: isProd ? '/power-bill-react/' : '', // <-- IMPORTANT: Replace 'power-bill-react' with your GitHub repository name
 
   // You can add other Next.js configurations here if needed
   // For example, if you use next/image with static export, you might need to unoptimize images:
