@@ -149,6 +149,15 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      <footer className="w-full text-center mt-12 p-4 text-gray-500 text-sm">
+        <p>
+          &copy; 2025{" "}
+          <a href="https://github.com/jmalm" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+            Jakob Malm
+          </a>
+        </p>
+      </footer>
     </main>
   );
 }
