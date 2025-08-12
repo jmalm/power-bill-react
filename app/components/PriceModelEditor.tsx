@@ -124,7 +124,7 @@ export default function PriceModelEditor({
               );
               onChange({ ...model, powerTariffs: newTariffs });
             }}
-            className="mt-2 bg-red-500 text-white p-2 rounded hover:bg-red-600"
+            className="mt-2 bg-gray-200 p-2 rounded hover:bg-red-600 hover:text-white"
           >
             Remove tariff
           </button>
@@ -139,7 +139,7 @@ export default function PriceModelEditor({
           ];
           onChange({ ...model, powerTariffs: newTariffs });
         }}
-        className="mt-4 bg-green-500 text-white p-2 rounded hover:bg-green-600"
+        className="mt-4 bg-gray-200 p-2 rounded hover:bg-green-600 hover:text-white"
       >
         New tariff
       </button>

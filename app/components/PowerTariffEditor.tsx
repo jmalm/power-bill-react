@@ -112,7 +112,7 @@ export default function PowerTariffEditor({
           <button
             type="button"
             onClick={() => onChange({ ...tariff, timeLimits: undefined })}
-            className="mt-2 bg-red-500 text-white p-2 rounded hover:bg-red-600"
+            className="mt-2 bg-gray-200 p-2 rounded hover:bg-red-600 hover:text-white"
           >
             Remove time limits
           </button>
@@ -126,7 +126,7 @@ export default function PowerTariffEditor({
               timeLimits: { startTime: "00:00", endTime: "23:59", months: [] },
             })
           }
-          className="mt-2 bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+          className="mt-2 bg-gray-200 p-2 rounded hover:bg-green-600 hover:text-white"
         >
           Add time limits
         </button>
@@ -193,7 +193,7 @@ export default function PowerTariffEditor({
           <button
             type="button"
             onClick={() => onChange({ ...tariff, reduction: undefined })}
-            className="mt-2 bg-red-500 text-white p-2 rounded hover:bg-red-600"
+            className="mt-2 bg-gray-200 hover:bg-red-600 hover:text-white p-2 rounded"
           >
             Remove night reduction
           </button>
@@ -207,7 +207,7 @@ export default function PowerTariffEditor({
               reduction: { factor: 0.5, startTime: "22:00", endTime: "08:00" },
             })
           }
-          className="mt-2 bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+          className="mt-2 bg-gray-200 hover:bg-green-600 hover:text-white p-2 rounded"
         >
           Add night reduction
         </button>
