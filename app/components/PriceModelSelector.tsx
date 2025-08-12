@@ -17,9 +17,6 @@ export default function PriceModelSelector({
 }: PriceModelSelectorProps) {
   return (
     <div className="mb-4">
-      <label htmlFor="price-model-select" className="block text-sm font-medium text-gray-200 mb-2">
-        Select Price Model
-      </label>
       <select
         id="price-model-select"
         value={selectedModel}
