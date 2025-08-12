@@ -10,7 +10,7 @@
     {
       "name": "Baslast",
       "fee_per_kw": 27.7,
-      "number_of_top_peaks_to_average": 2,
+      "number_of_top_peaks_to_average": 2
     },
     {
       "name": "Höglast",
