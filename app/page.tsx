@@ -44,72 +44,110 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center p-24">
-      <div className="w-full max-w-lg">
-        <h1 className="text-3xl font-bold mb-6 text-center">
-          Calculate Electricity Cost
-        </h1>
-
-        <PriceModelSelector
-          selectedModel={selectedModel}
-          onModelChange={setSelectedModel}
-          priceModels={priceModels}
-        />
-
-        <button
-          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded"
-          onClick={() => setShowEditor((prev) => !prev)}
-        >
-          {showEditor ? "Hide Details" : "Show Details"}
-        </button>
-
-        {showEditor && editingModel && (
-          <>
-            <PriceModelEditor
-              model={editingModel}
-              onChange={(model) => {
-                setEditingModel(model);
-                setPriceModels((prev) =>
-                  prev.map((m) => (m.name === model.name ? model : m))
-                );
-              }}
+      <h1 className="text-3xl font-bold mb-6 text-center">
+        Calculate Electricity Cost
+      </h1>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-8 w-full max-w-6xl">
+        {/* First Column: Price Model Selection and Editor */}
+        <div className="md:col-span-1">
+          <div className="bg-gray-50 p-6 rounded-lg shadow-lg">
+            <h2 className="text-xl font-semibold mb-4">Price Model</h2>
+            <PriceModelSelector
+              selectedModel={selectedModel}
+              onModelChange={setSelectedModel}
+              priceModels={priceModels}
             />
-            <button
-              className="mt-4 px-4 py-2 bg-green-600 text-white rounded"
-              onClick={() =>
-                downloadJson(
-                  editingModel,
-                  `${editingModel.name || "price-model"}.json`
-                )
-              }
-            >
-              Download as JSON
-            </button>
-          </>
-        )}
 
-        <div className="mt-8">
-          <label className="block mb-2 font-medium">Upload usage CSV</label>
-          <input
-            type="file"
-            accept=".csv,text/csv"
-            onChange={(e) => handleCsvUpload(e, setUsageData)}
-            className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-          />
-          {usageData.length > 0 && (
-            <div className="mt-2 text-sm text-green-400">
-              Loaded {usageData.length} usage rows. Total:{" "}
-              {totalUsage.toFixed(2)} kWh
-            </div>
-          )}
+            <button
+              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+              onClick={() => setShowEditor((prev) => !prev)}
+            >
+              {showEditor ? "Hide Details" : "Show Details"}
+            </button>
+
+            {showEditor && editingModel && (
+              <>
+                <PriceModelEditor
+                  model={editingModel}
+                  onChange={(model) => {
+                    setEditingModel(model);
+                    setPriceModels((prev) =>
+                      prev.map((m) => (m.name === model.name ? model : m))
+                    );
+                  }}
+                />
+                <button
+                  className="mt-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+                  onClick={() =>
+                    downloadJson(
+                      editingModel,
+                      `${editingModel.name || "price-model"}.json`
+                    )
+                  }
+                >
+                  Download as JSON
+                </button>
+              </>
+            )}
+          </div>
         </div>
 
-        {selected && (
-          <CostBreakdown
-            model={selected}
-            totalUsage={totalUsage}
-            topHours={topHours}
-          />
-        )}
+        {/* Second Column: File Upload and Cost Breakdown */}
+        <div className="md:col-span-2">
+          <div className="bg-gray-50 p-6 rounded-lg shadow-lg">
+            <h2 className="text-xl font-semibold mb-4">Usage Data</h2>
+            <div>
+              <label className="block mb-2 font-medium">Upload usage CSV</label>
+              <input
+                type="file"
+                accept=".csv,text/csv"
+                onChange={(e) => handleCsvUpload(e, setUsageData)}
+                className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+              />
+              {usageData.length > 0 && (
+                <div className="mt-2 text-sm text-green-400">
+                  Loaded {usageData.length} usage rows. Total:{" "}
+                  {totalUsage.toFixed(2)} kWh
+                </div>
+              )}
+            </div>
+
+            {selected && (
+              <CostBreakdown
+                model={selected}
+                totalUsage={totalUsage}
+                topHours={topHours}
+              />
+            )}
+          </div>
+        </div>
+
+        {/* Third Column: Help/Information */}
+        <div className="md:col-span-1 text-gray-400">
+          <div className="bg-gray-50 p-6 rounded-lg shadow-lg">
+            <h2 className="text-xl font-semibold mb-4">How to Use</h2>
+            <p className="mb-4">
+              1. Select a predefined price model or customize your own.
+            </p>
+            <p className="mb-4">
+              2. Upload a CSV file containing your electricity usage data. The CSV should have two columns: `timestamp` (e.g., YYYY-MM-DD HH:MM:SS) and `usage` (in kWh).
+            </p>
+            <p className="">
+              3. The cost breakdown will automatically update based on your selected price model and uploaded usage data.
+            </p>
+            
+            <h2 className="text-xl font-semibold mt-6 mb-4">Contribute Your Price Model</h2>
+            <p className="mt-4">
+              If you don't find a suitable price model, you can create a new one using the editor.
+              Click "Show Details" to access the editor.
+              Please consider sharing your model, for others to use, by
+              <ol className="list-decimal list-inside mt-2">
+                <li>Downloading it as a JSON file.</li>
+                <li>Uploading it to <a href="https://github.com/jmalm/power-bill-react/issues/1" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">Contributed price models on GitHub</a>.</li>
+              </ol>
+            </p>
+          </div>
+        </div>
       </div>
     </main>
   );
