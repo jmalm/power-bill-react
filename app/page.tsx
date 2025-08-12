@@ -93,7 +93,7 @@ export default function Home() {
             type="file"
             accept=".csv,text/csv"
             onChange={(e) => handleCsvUpload(e, setUsageData)}
-            className="block"
+            className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
           />
           {usageData.length > 0 && (
             <div className="mt-2 text-sm text-green-400">
