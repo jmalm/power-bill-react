@@ -13,7 +13,7 @@ export default function CostBreakdown({
   topHours,
 }: CostBreakdownProps) {
   // VAT factor
-  const vatFactor = model.pricesIncludeVat ? 1 : 1 / (1 + model.vatRate);
+  const vatFactor = model.pricesIncludeVat ? 1 / (1 + model.vatRate) : 1;
   // Fixed fee
   const fixedFee = model.fixedFeePerMonth * vatFactor;
 
@@ -59,23 +59,22 @@ export default function CostBreakdown({
         </span>
       </div>
       <div className="mb-2">
-        Usage fee ({totalUsage.toFixed(2)} kWh × {model.usageFeePerKWh} {model.currency}
-        /kWh):{" "}
+        Usage fee ({totalUsage.toFixed(2)} kWh × {(model.usageFeePerKWh * vatFactor).toFixed(2)} {model.currency} / kWh):{" "}
         <span className="float-right">
           {usageFee.toFixed(2)} {model.currency}
         </span>
       </div>
       {powerTariffRows.map((row) => (
         <div className="mb-2" key={row.name}>
-          {row.name} ({row.avgTop.toFixed(2)} kW × {row.feePerKW} {model.currency}/kW):{" "}
+          {row.name} ({row.avgTop.toFixed(2)} kW × {(row.feePerKW * vatFactor).toFixed(2)} {model.currency} / kW):{" "}
           <span className="float-right">
             {row.fee.toFixed(2)} {model.currency}
           </span>
         </div>
       ))}
       <div className="mb-2">
-        Electricity tax ({totalUsage.toFixed(2)} kWh × {model.usageTaxPerKWh}{" "}
-        {model.currency}/kWh):{" "}
+        Electricity tax ({totalUsage.toFixed(2)} kWh × {(model.usageTaxPerKWh * vatFactor).toFixed(2)}{" "}
+        {model.currency} / kWh):{" "}
         <span className="float-right">
           {usageTax.toFixed(2)} {model.currency}
         </span>

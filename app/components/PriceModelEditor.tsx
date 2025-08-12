@@ -53,16 +53,6 @@ export default function PriceModelEditor({
         />
       </div>
       <div>
-        <label className="block text-sm">Tax Rate</label>
-        <input
-          className="block w-full p-2 border rounded"
-          name="taxRate"
-          type="number"
-          value={model.vatRate}
-          onChange={handleFieldChange}
-        />
-      </div>
-      <div>
         <label className="block text-sm">Usage Tax Per kWh</label>
         <input
           className="block w-full p-2 border rounded"
@@ -73,13 +63,26 @@ export default function PriceModelEditor({
         />
       </div>
       <div>
-        <label className="block text-sm">Prices Include Tax</label>
+        <label className="block text-sm">VAT Rate</label>
         <input
-          type="checkbox"
-          name="pricesIncludeTax"
-          checked={model.pricesIncludeVat}
+          className="block w-full p-2 border rounded"
+          name="vatRate"
+          type="number"
+          value={model.vatRate}
           onChange={handleFieldChange}
         />
+      </div>
+      <div>
+        <label className="text-sm flex items-center">
+          <input
+            type="checkbox"
+            name="pricesIncludeVat"
+            checked={model.pricesIncludeVat}
+            onChange={handleFieldChange}
+            className="mr-2"
+          />
+          Prices Include VAT
+        </label>
       </div>
       <div>
         <label className="block text-sm">Fixed Fee Per Month</label>
