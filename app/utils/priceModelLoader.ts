@@ -20,14 +20,31 @@ function mapPowerTariff(json: any): PowerTariff {
     name: json.name,
     feePerKW: json.fee_per_kw,
     numberOfTopPeaksToAverage: json.number_of_top_peaks_to_average,
-    months: json.months,
+    timeLimits: json.time_limits ? mapTimeLimits(json.time_limits) : undefined,
+    reduction: json.reduction
+      ? mapNightReduction(json.reduction)
+      : undefined,
+  };
+}
+
+function mapTimeLimits(json: any): PowerTariff["timeLimits"] {
+  return {
     startTime: json.start_time,
     endTime: json.end_time,
+    months: json.months,
+  };
+}
+
+function mapNightReduction(json: any): PowerTariff["reduction"] {
+  return {
+    startTime: json.start_time,
+    endTime: json.end_time,
+    factor: json.factor,
   };
 }
 
 export async function loadPriceModels(): Promise<PriceModel[]> {
-  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
   // const basePath = '';
   const indexRes = await fetch(`${basePath}/price-models/models-index.json`);
   const indexData = await indexRes.json();

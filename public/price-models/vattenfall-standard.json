@@ -11,9 +11,11 @@
       "name": "Effect Tariff",
       "fee_per_kw": 45.5,
       "number_of_top_peaks_to_average": 3,
-      "months": [11, 12, 1, 2, 3],
-      "start_time": "06:00",
-      "end_time": "22:00"
+      "time_limits": {
+        "start_time": "07:00",
+        "end_time": "22:00",
+        "months": [11, 12, 1, 2, 3]
+      }
     }
   ]
 }

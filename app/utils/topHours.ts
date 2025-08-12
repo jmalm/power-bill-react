@@ -1,11 +1,14 @@
-import { PriceModel, PowerTariff, NightReduction } from "../models";
+import { PriceModel, PowerTariff, PowerTariffReduction } from "../models";
 import { UsageRow } from "./csv";
 
 interface TopHoursResult {
   [tariffName: string]: number; // average power for the N highest hours
 }
 
-function isWithinNightReduction(hour: number, reduction?: NightReduction) {
+function isWithinReduction(
+  hour: number,
+  reduction?: PowerTariffReduction
+) {
   if (!reduction) return false;
   const start = parseTimeString(reduction.startTime);
   const end = parseTimeString(reduction.endTime);
@@ -25,14 +28,15 @@ function parseTimeString(time: string | undefined): number | undefined {
 }
 
 function isWithinTariffMonth(date: Date, tariff: PowerTariff): boolean {
-  if (!tariff.months || tariff.months.length === 0) return true;
-  return tariff.months.includes(date.getMonth() + 1); // JS months: 0-11, your config: 1-12
+  if (!tariff.timeLimits?.months || tariff.timeLimits.months.length === 0) return true;
+  return tariff.timeLimits.months.includes(date.getMonth() + 1); // JS months: 0-11, your config: 1-12
 }
 
 function isWithinTariffTime(hour: number, tariff: PowerTariff): boolean {
-  if (!tariff.startTime || !tariff.endTime) return true;
-  const start = parseTimeString(tariff.startTime) ?? 0;
-  const end = parseTimeString(tariff.endTime) ?? 24;
+  if (!tariff.timeLimits
+    || !tariff.timeLimits.startTime || !tariff.timeLimits.endTime) return true;
+  const start = parseTimeString(tariff.timeLimits.startTime) ?? 0;
+  const end = parseTimeString(tariff.timeLimits.endTime) ?? 24;
   // If end < start, treat as overnight
   if (start < end) {
     return hour >= start && hour < end;
@@ -65,11 +69,8 @@ function getTopHourPerDay(
     if (!isWithinTariffTime(hour, tariff)) continue;
     let usage = usageByDayHour[hour] || 0;
     // Night reduction if needed (optional, not in your prompt)
-    if (
-      tariff.nightReduction &&
-      isWithinNightReduction(hour, tariff.nightReduction)
-    ) {
-      usage *= tariff.nightReduction.factor;
+    if (tariff.reduction && isWithinReduction(hour, tariff.reduction)) {
+      usage *= tariff.reduction.factor;
     }
     if (usage > topUsage) {
       topUsage = usage;
