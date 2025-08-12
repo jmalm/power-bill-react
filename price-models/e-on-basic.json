@@ -11,9 +11,11 @@
       "name": "Peak Load",
       "fee_per_kw": 52.0,
       "number_of_top_peaks_to_average": 2,
-      "months": [10, 11, 12, 1, 2, 3, 4],
-      "start_time": "07:00",
-      "end_time": "21:00"
+      "time_limits": {
+        "start_time": "07:00",
+        "end_time": "22:00",
+        "months": [11, 12, 1, 2, 3]
+      }
     }
   ]
 }

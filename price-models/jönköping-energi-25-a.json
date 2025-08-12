@@ -11,15 +11,16 @@
       "name": "Baslast",
       "fee_per_kw": 27.7,
       "number_of_top_peaks_to_average": 2,
-      "months": []
     },
     {
       "name": "Höglast",
       "fee_per_kw": 65.66,
       "number_of_top_peaks_to_average": 2,
-      "months": [1, 2, 3, 11, 12],
-      "start_time": "07:00",
-      "end_time": "22:00"
+      "time_limits": {
+        "start_time": "07:00",
+        "end_time": "22:00",
+        "months": [11, 12, 1, 2, 3]
+      }
     }
   ]
 }
