@@ -53,7 +53,7 @@ export default function PriceModelEditor({
         />
       </div>
       <div>
-        <label className="block text-sm">Usage Tax Per kWh</label>
+        <label className="block text-sm">Usage tax per kWh</label>
         <input
           className="block w-full p-2 border rounded"
           name="usageTaxPerKWh"
@@ -63,7 +63,7 @@ export default function PriceModelEditor({
         />
       </div>
       <div>
-        <label className="block text-sm">VAT Rate</label>
+        <label className="block text-sm">VAT rate</label>
         <input
           className="block w-full p-2 border rounded"
           name="vatRate"
@@ -81,11 +81,11 @@ export default function PriceModelEditor({
             onChange={handleFieldChange}
             className="mr-2"
           />
-          Prices Include VAT
+          Prices include VAT
         </label>
       </div>
       <div>
-        <label className="block text-sm">Fixed Fee Per Month</label>
+        <label className="block text-sm">Fixed fee per month</label>
         <input
           className="block w-full p-2 border rounded"
           name="fixedFeePerMonth"
@@ -95,7 +95,7 @@ export default function PriceModelEditor({
         />
       </div>
       <div>
-        <label className="block text-sm">Usage Fee Per kWh</label>
+        <label className="block text-sm">Usage fee per kWh</label>
         <input
           className="block w-full p-2 border rounded"
           name="usageFeePerKWh"
@@ -105,7 +105,7 @@ export default function PriceModelEditor({
         />
       </div>
       {/* You can add editing for powerTariffs here */}{" "}
-      <h3 className="text-lg font-semibold mt-4">Power Tariffs</h3>
+      <h3 className="text-lg font-semibold mt-4">Power tariffs</h3>
       {model.powerTariffs.map((tariff, index) => (
         <div key={index} className="border p-2 rounded mt-2">
           <PowerTariffEditor
@@ -126,7 +126,7 @@ export default function PriceModelEditor({
             }}
             className="mt-2 bg-red-500 text-white p-2 rounded hover:bg-red-600"
           >
-            Remove Tariff
+            Remove tariff
           </button>
         </div>
       ))}
@@ -141,7 +141,7 @@ export default function PriceModelEditor({
         }}
         className="mt-4 bg-green-500 text-white p-2 rounded hover:bg-green-600"
       >
-        Add New Tariff
+        New tariff
       </button>
     </form>
   );

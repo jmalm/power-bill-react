@@ -20,9 +20,9 @@ export default function PowerTariffEditor({
   };
 
   return (
-    <div className="space-y-2 border p-2 rounded">
+    <div className="space-y-2">
       <div>
-        <label className="block text-sm">Tariff Name</label>
+        <label className="block text-sm">Tariff name</label>
         <input
           className="block w-full p-2 border rounded"
           name="name"
@@ -31,7 +31,7 @@ export default function PowerTariffEditor({
         />
       </div>
       <div>
-        <label className="block text-sm">Fee Per KW</label>
+        <label className="block text-sm">Fee per kW</label>
         <input
           className="block w-full p-2 border rounded"
           name="feePerKW"
@@ -41,7 +41,7 @@ export default function PowerTariffEditor({
         />
       </div>
       <div>
-        <label className="block text-sm">Number of Top Peaks to Average</label>
+        <label className="block text-sm">Number of top peaks to average</label>
         <input
           className="block w-full p-2 border rounded"
           name="numberOfTopPeaksToAverage"
@@ -50,11 +50,11 @@ export default function PowerTariffEditor({
           onChange={handleFieldChange}
         />
       </div>
-      <h4 className="text-md font-semibold mt-2">Time Limits (Optional)</h4>
+      <h4 className="text-md font-semibold mt-2">Time limits (optional)</h4>
       {tariff.timeLimits ? (
         <>
           <div>
-            <label className="block text-sm">Start Time</label>
+            <label className="block text-sm">Start time</label>
             <input
               className="block w-full p-2 border rounded"
               name="startTime"
@@ -72,7 +72,7 @@ export default function PowerTariffEditor({
             />
           </div>
           <div>
-            <label className="block text-sm">End Time</label>
+            <label className="block text-sm">End time</label>
             <input
               className="block w-full p-2 border rounded"
               name="endTime"
@@ -90,7 +90,7 @@ export default function PowerTariffEditor({
             />
             <div>
               <label className="block text-sm">
-                Months (0-11, comma-separated)
+                Months (1 - 12, comma-separated)
               </label>
               <input
                 className="block w-full p-2 border rounded"
@@ -114,7 +114,7 @@ export default function PowerTariffEditor({
             onClick={() => onChange({ ...tariff, timeLimits: undefined })}
             className="mt-2 bg-red-500 text-white p-2 rounded hover:bg-red-600"
           >
-            Remove Time Limits
+            Remove time limits
           </button>
         </>
       ) : (
@@ -128,14 +128,14 @@ export default function PowerTariffEditor({
           }
           className="mt-2 bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
         >
-          Add Time Limits
+          Add time limits
         </button>
       )}
-      <h4 className="text-md font-semibold mt-2">Night Reduction (Optional)</h4>
+      <h4 className="text-md font-semibold mt-2">Night reduction (optional)</h4>
       {tariff.reduction ? (
         <>
           <div>
-            <label className="block text-sm">Reduction Factor</label>
+            <label className="block text-sm">Reduction factor</label>
             <input
               className="block w-full p-2 border rounded"
               name="nightReduction.factor"
@@ -155,7 +155,7 @@ export default function PowerTariffEditor({
             />
           </div>
           <div>
-            <label className="block text-sm">Reduction Start Time</label>
+            <label className="block text-sm">Reduction start time</label>
             <input
               className="block w-full p-2 border rounded"
               name="nightReduction.startTime"
@@ -173,7 +173,7 @@ export default function PowerTariffEditor({
             />
           </div>
           <div>
-            <label className="block text-sm">Reduction End Time</label>
+            <label className="block text-sm">Reduction end time</label>
             <input
               className="block w-full p-2 border rounded"
               name="nightReduction.endTime"
@@ -195,7 +195,7 @@ export default function PowerTariffEditor({
             onClick={() => onChange({ ...tariff, reduction: undefined })}
             className="mt-2 bg-red-500 text-white p-2 rounded hover:bg-red-600"
           >
-            Remove Night Reduction
+            Remove night reduction
           </button>
         </>
       ) : (
@@ -209,7 +209,7 @@ export default function PowerTariffEditor({
           }
           className="mt-2 bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
         >
-          Add Night Reduction
+          Add night reduction
         </button>
       )}
     </div>
