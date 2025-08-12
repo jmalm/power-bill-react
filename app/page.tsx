@@ -43,13 +43,13 @@ export default function Home() {
       : {};
 
   return (
-    <main className="flex min-h-screen flex-col items-center p-24">
+    <main className="flex min-h-screen flex-col items-center p-4 md:p-24 w-full">
       <h1 className="text-3xl font-bold mb-6 text-center">
         Calculate Electricity Cost
       </h1>
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-8 w-full max-w-6xl">
+      <div className="grid grid-cols-[minmax(0,40rem)] xl:grid-cols-[minmax(18rem,18rem)_minmax(30rem,40rem)_minmax(18rem,18rem)] gap-8 justify-center w-full max-w-8xl mx-auto">
         {/* First Column: Price Model Selection and Editor */}
-        <div className="md:col-span-1">
+        <div>
           <div className="bg-gray-50 p-6 rounded-lg shadow-lg">
             <h2 className="text-xl font-semibold mb-4">Price Model</h2>
             <PriceModelSelector
@@ -93,7 +93,7 @@ export default function Home() {
         </div>
 
         {/* Second Column: File Upload and Cost Breakdown */}
-        <div className="md:col-span-2">
+        <div>
           <div className="bg-gray-50 p-6 rounded-lg shadow-lg">
             <h2 className="text-xl font-semibold mb-4">Usage Data</h2>
             <div>
@@ -123,7 +123,7 @@ export default function Home() {
         </div>
 
         {/* Third Column: Help/Information */}
-        <div className="md:col-span-1 text-gray-400">
+        <div className="text-gray-400">
           <div className="bg-gray-50 p-6 rounded-lg shadow-lg">
             <h2 className="text-xl font-semibold mb-4">How to Use</h2>
             <p className="mb-4">
@@ -141,11 +141,11 @@ export default function Home() {
               If you don't find a suitable price model, you can create a new one using the editor.
               Click "Show Details" to access the editor.
               Please consider sharing your model, for others to use, by
-              <ol className="list-decimal list-inside mt-2">
-                <li>Downloading it as a JSON file.</li>
-                <li>Uploading it to <a href="https://github.com/jmalm/power-bill-react/issues/1" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">Contributed price models on GitHub</a>.</li>
-              </ol>
             </p>
+            <ol className="list-decimal list-inside mt-2">
+              <li>Downloading it as a JSON file.</li>
+              <li>Uploading it to <a href="https://github.com/jmalm/power-bill-react/issues/1" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">Contributed price models on GitHub</a>.</li>
+            </ol>
           </div>
         </div>
       </div>
