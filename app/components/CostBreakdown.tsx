@@ -50,47 +50,63 @@ export default function CostBreakdown({
   const total = subtotal + vat;
 
   return (
-    <div className="mt-8 p-4 bg-gray-900 rounded shadow text-white">
+    <div className="mt-8 md:p-4 md:bg-white md:rounded md:shadow text-gray-900">
       <h2 className="text-xl font-semibold mb-4">Cost Breakdown</h2>
-      <div className="mb-2">
-        Fixed fee:{" "}
-        <span className="float-right">
-          {fixedFee.toFixed(2)} {model.currency}
-        </span>
-      </div>
-      <div className="mb-2">
-        Usage fee ({totalUsage.toFixed(2)} kWh × {(model.usageFeePerKWh * vatFactor).toFixed(2)} {model.currency} / kWh):{" "}
-        <span className="float-right">
-          {usageFee.toFixed(2)} {model.currency}
-        </span>
-      </div>
-      {powerTariffRows.map((row) => (
-        <div className="mb-2" key={row.name}>
-          {row.name} ({row.avgTop.toFixed(2)} kW × {(row.feePerKW * vatFactor).toFixed(2)} {model.currency} / kW):{" "}
-          <span className="float-right">
-            {row.fee.toFixed(2)} {model.currency}
-          </span>
-        </div>
-      ))}
-      <div className="mb-2">
-        Electricity tax ({totalUsage.toFixed(2)} kWh × {(model.usageTaxPerKWh * vatFactor).toFixed(2)}{" "}
-        {model.currency} / kWh):{" "}
-        <span className="float-right">
-          {usageTax.toFixed(2)} {model.currency}
-        </span>
-      </div>
-      <div className="mb-2">
-        VAT ({(model.vatRate * 100).toFixed(1)}%):{" "}
-        <span className="float-right">
-          {vat.toFixed(2)} {model.currency}
-        </span>
-      </div>
-      <div className="mt-4 font-bold text-lg">
-        Total:{" "}
-        <span className="float-right">
-          {total.toFixed(2)} {model.currency}
-        </span>
-      </div>
+      <table className="w-full text-left table-auto">
+        <tbody>
+          <tr className="border-b border-gray-200">
+            <td className="py-1">Fixed fee</td>
+            <td className="py-1 text-right">
+              {fixedFee.toFixed(2)}&nbsp;{model.currency}
+            </td>
+          </tr>
+          <tr className="border-b border-gray-200">
+            <td className="py-1">
+              Usage fee ({totalUsage.toFixed(2)}&nbsp;kWh ×{" "}
+              {(model.usageFeePerKWh * vatFactor).toFixed(2)}&nbsp;
+              {model.currency}&nbsp;/&nbsp;kWh)
+            </td>
+            <td className="py-1 text-right">
+              {usageFee.toFixed(2)}&nbsp;{model.currency}
+            </td>
+          </tr>
+          {powerTariffRows.map((row) => (
+            <tr className="border-b border-gray-200" key={row.name}>
+              <td className="py-1">
+                {row.name} ({row.avgTop.toFixed(2)}&nbsp;kW ×{" "}
+                {(row.feePerKW * vatFactor).toFixed(2)}&nbsp;{model.currency}&nbsp;/&nbsp;kW)
+              </td>
+              <td className="py-1 text-right">
+                {row.fee.toFixed(2)}&nbsp;{model.currency}
+              </td>
+            </tr>
+          ))}
+          <tr className="border-b border-gray-200">
+            <td className="py-1">
+              Electricity tax ({totalUsage.toFixed(2)}&nbsp;kWh ×{" "}
+              {(model.usageTaxPerKWh * vatFactor).toFixed(2)}&nbsp;
+              {model.currency}&nbsp;/&nbsp;kWh)
+            </td>
+            <td className="py-1 text-right">
+              {usageTax.toFixed(2)}&nbsp;{model.currency}
+            </td>
+          </tr>
+          <tr className="border-b border-gray-200">
+            <td className="py-1">
+              VAT ({(model.vatRate * 100).toFixed(1)}%)
+            </td>
+            <td className="py-1 text-right">
+              {vat.toFixed(2)}&nbsp;{model.currency}
+            </td>
+          </tr>
+          <tr className="font-bold text-lg">
+            <td className="py-2">Total</td>
+            <td className="py-2 text-right">
+              {total.toFixed(2)}&nbsp;{model.currency}
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   );
 }
