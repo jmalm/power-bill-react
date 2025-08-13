@@ -37,7 +37,7 @@ export default function PriceModelEditor({
       <div>
         <label className="block text-sm">Name</label>
         <input
-          className="block w-full p-2 border rounded"
+          className="block w-full p-2 bg-white rounded"
           name="name"
           value={model.name}
           onChange={handleFieldChange}
@@ -46,7 +46,7 @@ export default function PriceModelEditor({
       <div>
         <label className="block text-sm">Currency</label>
         <input
-          className="block w-full p-2 border rounded"
+          className="block w-full p-2 bg-white rounded"
           name="currency"
           value={model.currency}
           onChange={handleFieldChange}
@@ -55,7 +55,7 @@ export default function PriceModelEditor({
       <div>
         <label className="block text-sm">Usage tax per kWh</label>
         <input
-          className="block w-full p-2 border rounded"
+          className="block w-full p-2 bg-white rounded"
           name="usageTaxPerKWh"
           type="number"
           value={model.usageTaxPerKWh}
@@ -65,7 +65,7 @@ export default function PriceModelEditor({
       <div>
         <label className="block text-sm">VAT rate</label>
         <input
-          className="block w-full p-2 border rounded"
+          className="block w-full p-2 bg-white rounded"
           name="vatRate"
           type="number"
           value={model.vatRate}
@@ -87,7 +87,7 @@ export default function PriceModelEditor({
       <div>
         <label className="block text-sm">Fixed fee per month</label>
         <input
-          className="block w-full p-2 border rounded"
+          className="block w-full p-2 bg-white rounded"
           name="fixedFeePerMonth"
           type="number"
           value={model.fixedFeePerMonth}
@@ -97,7 +97,7 @@ export default function PriceModelEditor({
       <div>
         <label className="block text-sm">Usage fee per kWh</label>
         <input
-          className="block w-full p-2 border rounded"
+          className="block w-full p-2 bg-white rounded"
           name="usageFeePerKWh"
           type="number"
           value={model.usageFeePerKWh}
@@ -107,7 +107,7 @@ export default function PriceModelEditor({
       {/* You can add editing for powerTariffs here */}{" "}
       <h3 className="text-lg font-semibold mt-4">Power tariffs</h3>
       {model.powerTariffs.map((tariff, index) => (
-        <div key={index} className="border p-2 rounded mt-2">
+        <div key={index} className="bg-gray-100 p-4 rounded mt-2">
           <PowerTariffEditor
             tariff={tariff}
             onChange={(updatedTariff) => {

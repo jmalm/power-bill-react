@@ -24,7 +24,7 @@ export default function PowerTariffEditor({
       <div>
         <label className="block text-sm">Tariff name</label>
         <input
-          className="block w-full p-2 border rounded"
+          className="block w-full p-2 bg-white rounded"
           name="name"
           value={tariff.name}
           onChange={handleFieldChange}
@@ -33,7 +33,7 @@ export default function PowerTariffEditor({
       <div>
         <label className="block text-sm">Fee per kW</label>
         <input
-          className="block w-full p-2 border rounded"
+          className="block w-full p-2 bg-white rounded"
           name="feePerKW"
           type="number"
           value={tariff.feePerKW}
@@ -43,7 +43,7 @@ export default function PowerTariffEditor({
       <div>
         <label className="block text-sm">Number of top peaks to average</label>
         <input
-          className="block w-full p-2 border rounded"
+          className="block w-full p-2 bg-white rounded"
           name="numberOfTopPeaksToAverage"
           type="number"
           value={tariff.numberOfTopPeaksToAverage}
@@ -56,7 +56,7 @@ export default function PowerTariffEditor({
           <div>
             <label className="block text-sm">Start time</label>
             <input
-              className="block w-full p-2 border rounded"
+              className="block w-full p-2 bg-white rounded"
               name="startTime"
               type="time"
               value={tariff.timeLimits.startTime}
@@ -74,7 +74,7 @@ export default function PowerTariffEditor({
           <div>
             <label className="block text-sm">End time</label>
             <input
-              className="block w-full p-2 border rounded"
+              className="block w-full p-2 bg-white rounded"
               name="endTime"
               type="time"
               value={tariff.timeLimits.endTime}
@@ -93,7 +93,7 @@ export default function PowerTariffEditor({
                 Months (1 - 12, comma-separated)
               </label>
               <input
-                className="block w-full p-2 border rounded"
+                className="block w-full p-2 bg-white rounded"
                 name="months"
                 value={tariff.timeLimits.months?.join(",")}
                 onChange={(e) => {
@@ -137,7 +137,7 @@ export default function PowerTariffEditor({
           <div>
             <label className="block text-sm">Reduction factor</label>
             <input
-              className="block w-full p-2 border rounded"
+              className="block w-full p-2 bg-white rounded"
               name="nightReduction.factor"
               type="number"
               step="0.01"
@@ -157,7 +157,7 @@ export default function PowerTariffEditor({
           <div>
             <label className="block text-sm">Reduction start time</label>
             <input
-              className="block w-full p-2 border rounded"
+              className="block w-full p-2 bg-white rounded"
               name="nightReduction.startTime"
               type="time"
               value={tariff.reduction.startTime}
@@ -175,7 +175,7 @@ export default function PowerTariffEditor({
           <div>
             <label className="block text-sm">Reduction end time</label>
             <input
-              className="block w-full p-2 border rounded"
+              className="block w-full p-2 bg-white rounded"
               name="nightReduction.endTime"
               type="time"
               value={tariff.reduction.endTime}
