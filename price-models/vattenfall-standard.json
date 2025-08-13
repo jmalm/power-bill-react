@@ -1,6 +1,6 @@
 {
   "name": "Vattenfall Standard",
-  "currency": "SEK",
+  "currency": "kr",
   "vat_rate": 0.25,
   "prices_include_tax": true,
   "fixed_fee_per_month": 295.0,

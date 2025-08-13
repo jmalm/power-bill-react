@@ -1,6 +1,6 @@
 {
   "name": "E.ON Basic Plan",
-  "currency": "SEK",
+  "currency": "kr",
   "vat_rate": 0.25,
   "prices_include_tax": true,
   "fixed_fee_per_month": 320.0,
