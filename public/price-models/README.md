@@ -7,7 +7,7 @@ To add a new electricity provider's pricing model, create a JSON file in this di
 ```json
 {
   "name": "Provider Name",
-  "currency": "SEK",
+  "currency": "kr",
   "vat_rate": 0.25,
   "prices_include_tax": true,
   "fixed_fee_per_month": 350.0,
@@ -35,7 +35,7 @@ To add a new electricity provider's pricing model, create a JSON file in this di
 **Required Fields:**
 
 - `name`: Display name for the model
-- `currency`: 3-letter currency code (SEK, EUR, USD, etc.)
+- `currency`: kr, €, $, EUR, USD, etc.
 - `fixed_fee_per_month`: Monthly fixed cost in currency units
 - `usage_fee_per_kwh`: Cost per kWh in currency units
 - `vat_rate`: VAT/tax rate as decimal (0.25 = 25%)
