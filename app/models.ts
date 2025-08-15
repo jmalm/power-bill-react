@@ -7,16 +7,21 @@ export interface PriceModel {
   vatRate: number;
   pricesIncludeVat: boolean;
   fixedFeePerMonth: number;
-  usageFeePerKWh: number;
-  usageTaxPerKWh: number;
+  usageFees: UsageFee[];
   powerTariffs: PowerTariff[];
+}
+
+export interface UsageFee {
+  name: string;
+  feePerKW: number;
+  timeLimits?: TimeLimits;
 }
 
 export interface PowerTariff {
   name: string;
   feePerKW: number;
   numberOfTopPeaksToAverage: number;
-  timeLimits?: PowerTariffTimeLimits;
+  timeLimits?: TimeLimits;
   reduction?: PowerTariffReduction;
 }
 
@@ -35,7 +40,7 @@ export enum Month {
   December = 11,
 }
 
-export interface PowerTariffTimeLimits {
+export interface TimeLimits {
   startTime: string;
   endTime: string;
   months: number[];

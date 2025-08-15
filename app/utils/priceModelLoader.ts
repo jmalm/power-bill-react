@@ -1,6 +1,4 @@
-import { usePathname } from "next/navigation";
-import { PriceModel, PowerTariff } from "../models";
-import { useRouter } from "next/router";
+import { PriceModel, PowerTariff, TimeLimits, PowerTariffReduction, UsageFee } from "../models";
 
 export function mapPriceModel(json: any): PriceModel {
   return {
@@ -9,9 +7,16 @@ export function mapPriceModel(json: any): PriceModel {
     vatRate: json.vat_rate,
     pricesIncludeVat: json.prices_include_tax,
     fixedFeePerMonth: json.fixed_fee_per_month,
-    usageFeePerKWh: json.usage_fee_per_kwh,
-    usageTaxPerKWh: json.usage_tax_per_kwh,
+    usageFees: json.usage_fees?.map(mapUsageFee) || [],
     powerTariffs: json.power_tariffs?.map(mapPowerTariff) || [],
+  };
+}
+
+function mapUsageFee(json: any): UsageFee {
+  return {
+    name: json.name,
+    feePerKW: json.fee_per_kw,
+    timeLimits: json.time_limits ? mapTimeLimits(json.time_limits) : undefined,
   };
 }
 
@@ -27,7 +32,7 @@ function mapPowerTariff(json: any): PowerTariff {
   };
 }
 
-function mapTimeLimits(json: any): PowerTariff["timeLimits"] {
+function mapTimeLimits(json: any): TimeLimits {
   return {
     startTime: json.start_time,
     endTime: json.end_time,
@@ -35,7 +40,7 @@ function mapTimeLimits(json: any): PowerTariff["timeLimits"] {
   };
 }
 
-function mapNightReduction(json: any): PowerTariff["reduction"] {
+function mapNightReduction(json: any): PowerTariffReduction {
   return {
     startTime: json.start_time,
     endTime: json.end_time,

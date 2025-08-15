@@ -1,6 +1,7 @@
 import React from "react";
 import { PriceModel, PowerTariff, PowerTariffReduction } from "../models";
 import PowerTariffEditor from "./PowerTariffEditor";
+import UsageEditor from "./UsageEditor";
 
 interface PriceModelEditorProps {
   model: PriceModel;
@@ -34,6 +35,8 @@ export default function PriceModelEditor({
 
   return (
     <form className="space-y-2">
+
+      {/* Top-level fields */}
       <div>
         <label className="block text-sm">Name</label>
         <input
@@ -49,16 +52,6 @@ export default function PriceModelEditor({
           className="block w-full p-2 bg-white rounded"
           name="currency"
           value={model.currency}
-          onChange={handleFieldChange}
-        />
-      </div>
-      <div>
-        <label className="block text-sm">Usage tax per kWh</label>
-        <input
-          className="block w-full p-2 bg-white rounded"
-          name="usageTaxPerKWh"
-          type="number"
-          value={model.usageTaxPerKWh}
           onChange={handleFieldChange}
         />
       </div>
@@ -94,17 +87,49 @@ export default function PriceModelEditor({
           onChange={handleFieldChange}
         />
       </div>
-      <div>
-        <label className="block text-sm">Usage fee per kWh</label>
-        <input
-          className="block w-full p-2 bg-white rounded"
-          name="usageFeePerKWh"
-          type="number"
-          value={model.usageFeePerKWh}
-          onChange={handleFieldChange}
-        />
-      </div>
-      {/* You can add editing for powerTariffs here */}{" "}
+
+      {/* Usage fees */}
+      <h3 className="text-lg font-semibold mt-4">Usage fees</h3>
+      {model.usageFees.map((usageFee, index) => (
+        <div key={index} className="bg-gray-100 p-4 rounded mt-2">
+          <UsageEditor
+            usageFee={usageFee}
+            onChange={(fee) => {
+              const newUsageFees = [...model.usageFees];
+              newUsageFees[index] = fee;
+              onChange({ ...model, usageFees: newUsageFees });
+            }}
+          />
+          <button
+            type="button"
+            onClick={() => {
+              const newFees = [...model.usageFees];
+              newFees.splice(index, 1);
+              onChange({ ...model, usageFees: newFees });
+            }}
+            className="mt-2 bg-red-600 text-white p-2 rounded hover:bg-red-700"
+          >
+            Remove Fee
+          </button>
+        </div>
+      ))}
+      <button
+        type="button"
+        onClick={() =>
+          onChange({
+            ...model,
+            usageFees: [
+              ...model.usageFees,
+              { name: "", feePerKW: 0, timeLimits: undefined },
+            ],
+          })
+        }
+        className="mt-2 bg-green-600 text-white p-2 rounded hover:bg-green-700"
+      >
+        Add Usage Fee
+      </button>
+
+      {/* Power tariffs */}{" "}
       <h3 className="text-lg font-semibold mt-4">Power tariffs</h3>
       {model.powerTariffs.map((tariff, index) => (
         <div key={index} className="bg-gray-100 p-4 rounded mt-2">

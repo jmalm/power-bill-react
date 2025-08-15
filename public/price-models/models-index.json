@@ -1,10 +1,9 @@
 {
     "models": [
+        "ellevio-standard.json",
         "jönköping-energi-20-a.json",
         "jönköping-energi-25-a.json",
-        "vattenfall-standard.json",
-        "e-on-basic.json",
-        "ellevio-standard.json"
+        "tekniska-verken-20-a.json"
     ],
-    "last_updated": "2025-07-30"
+    "last_updated": "2025-08-15"
 }

@@ -9,7 +9,10 @@ import { loadPriceModels } from "./utils/priceModelLoader";
 import { downloadJson } from "./utils/downloadJson";
 import CostBreakdown from "./components/CostBreakdown";
 import { handleCsvUpload, UsageRow } from "./utils/csv";
-import { calculateTopHoursPerTariff } from "./utils/topHours";
+import {
+  calculateTopHoursPerTariff,
+  calculateTotalUsagePerFee,
+} from "./utils/topHours";
 
 export default function Home() {
   const [selectedModel, setSelectedModel] = useState("custom");
@@ -35,9 +38,13 @@ export default function Home() {
 
   // Calculate total usage from the loaded data
   const totalUsage = usageData.reduce((sum, row) => sum + row.usage, 0);
+  const totalUsagePerFee =
+    selected && usageData.length
+      ? calculateTotalUsagePerFee(usageData, selected)
+      : {};
 
   // Calculate top hours per tariff for CostBreakdown
-  const topHours =
+  const topHoursPerTariff =
     selected && usageData.length
       ? calculateTopHoursPerTariff(usageData, selected)
       : {};
@@ -112,11 +119,11 @@ export default function Home() {
               )}
             </div>
 
-            {selected && (
+            {selected && usageData.length > 0 && (
               <CostBreakdown
                 model={selected}
-                totalUsage={totalUsage}
-                topHours={topHours}
+                totalUsagePerFee={totalUsagePerFee}
+                topHoursPerTariff={topHoursPerTariff}
               />
             )}
           </div>
@@ -130,21 +137,37 @@ export default function Home() {
               1. Select a predefined price model or customize your own.
             </p>
             <p className="mb-4">
-              2. Upload a CSV file containing your electricity usage data. The CSV should have two columns: `timestamp` (e.g., YYYY-MM-DD HH:MM:SS) and `usage` (in kWh).
+              2. Upload a CSV file containing your electricity usage data. The
+              CSV should have two columns: `timestamp` (e.g., YYYY-MM-DD
+              HH:MM:SS) and `usage` (in kWh).
             </p>
             <p className="">
-              3. The cost breakdown will automatically update based on your selected price model and uploaded usage data.
+              3. The cost breakdown will automatically update based on your
+              selected price model and uploaded usage data.
             </p>
-            
-            <h2 className="text-xl font-semibold mt-6 mb-4">Contribute Your Price Model</h2>
+
+            <h2 className="text-xl font-semibold mt-6 mb-4">
+              Contribute Your Price Model
+            </h2>
             <p className="mt-4">
-              If you don't find a suitable price model, you can create a new one using the editor.
-              Click "Show Details" to access the editor.
+              If you don't find a suitable price model, you can create a new one
+              using the editor. Click "Show Details" to access the editor.
               Please consider sharing your model, for others to use, by
             </p>
             <ol className="list-decimal list-inside mt-2">
               <li>Downloading it as a JSON file.</li>
-              <li>Uploading it to <a href="https://github.com/jmalm/power-bill-react/issues/1" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">Contributed price models on GitHub</a>.</li>
+              <li>
+                Uploading it to{" "}
+                <a
+                  href="https://github.com/jmalm/power-bill-react/issues/1"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-500 hover:underline"
+                >
+                  Contributed price models on GitHub
+                </a>
+                .
+              </li>
             </ol>
           </div>
         </div>
@@ -153,7 +176,12 @@ export default function Home() {
       <footer className="w-full text-center mt-12 p-4 text-gray-500 text-sm">
         <p>
           &copy; 2025{" "}
-          <a href="https://github.com/jmalm" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+          <a
+            href="https://github.com/jmalm"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-500 hover:underline"
+          >
             Jakob Malm
           </a>
         </p>

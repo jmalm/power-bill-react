@@ -3,26 +3,37 @@ import { PriceModel, PowerTariff } from "../models";
 
 interface CostBreakdownProps {
   model: PriceModel;
-  totalUsage: number; // in kWh
-  topHours: Record<string, number>; // { [tariff name]: average power of N top hours, kW }
+  totalUsagePerFee: Record<string, number>; // { [fee name]: total usage, kWh }
+  topHoursPerTariff: Record<string, number>; // { [tariff name]: average power of N top hours, kW }
 }
 
 export default function CostBreakdown({
   model,
-  totalUsage,
-  topHours,
+  totalUsagePerFee,
+  topHoursPerTariff,
 }: CostBreakdownProps) {
   // VAT factor
   const vatFactor = model.pricesIncludeVat ? 1 / (1 + model.vatRate) : 1;
   // Fixed fee
   const fixedFee = model.fixedFeePerMonth * vatFactor;
 
-  // Usage fee
-  const usageFee = totalUsage * model.usageFeePerKWh * vatFactor;
+  // Usage fees
+  const usageFeeRows = model.usageFees.map((fee) => {
+    const feePerKW = fee.feePerKW * vatFactor;
+    const totalUsage = totalUsagePerFee[fee.name] || 0;
+    const usageFee = totalUsage * feePerKW;
+    return {
+      name: fee.name,
+      fee: usageFee,
+      feePerKW,
+      totalUsage,
+      timeLimits: fee.timeLimits,
+    };
+  });
 
   // Power tariffs
   const powerTariffRows = model.powerTariffs.map((tariff) => {
-    const avgTop = topHours[tariff.name] || 0;
+    const avgTop = topHoursPerTariff[tariff.name] || 0;
     const tariffFee = avgTop * tariff.feePerKW * vatFactor;
     return {
       name: tariff.name,
@@ -33,15 +44,11 @@ export default function CostBreakdown({
     };
   });
 
-  // Electricity tax
-  const usageTax = totalUsage * model.usageTaxPerKWh * vatFactor;
-
   // Subtotal before VAT
   const subtotal =
     fixedFee +
-    usageFee +
-    powerTariffRows.reduce((sum, row) => sum + row.fee, 0) +
-    usageTax;
+    usageFeeRows.reduce((sum, row) => sum + row.fee, 0) +
+    powerTariffRows.reduce((sum, row) => sum + row.fee, 0);
 
   // VAT
   const vat = subtotal * model.vatRate;
@@ -60,21 +67,23 @@ export default function CostBreakdown({
               {fixedFee.toFixed(2)}&nbsp;{model.currency}
             </td>
           </tr>
-          <tr className="border-b border-gray-200">
-            <td className="py-1">
-              Usage fee ({totalUsage.toFixed(2)}&nbsp;kWh ×{" "}
-              {(model.usageFeePerKWh * vatFactor).toFixed(2)}&nbsp;
-              {model.currency}&nbsp;/&nbsp;kWh)
-            </td>
-            <td className="py-1 text-right">
-              {usageFee.toFixed(2)}&nbsp;{model.currency}
-            </td>
-          </tr>
-          {powerTariffRows.map((row) => (
+          {usageFeeRows.map((row) => row.totalUsage > 0 && (
+            <tr className="border-b border-gray-200" key={row.name}>
+              <td className="py-1">
+                {row.name} ({row.totalUsage.toFixed(2)}&nbsp;kWh ×{" "}
+                {row.feePerKW.toFixed(2)}&nbsp;{model.currency}&nbsp;/&nbsp;kWh)
+              </td>
+              <td className="py-1 text-right">
+                {row.fee.toFixed(2)}&nbsp;{model.currency}
+              </td>
+            </tr>
+          ))}
+          {powerTariffRows.map((row) => row.avgTop > 0 && (
             <tr className="border-b border-gray-200" key={row.name}>
               <td className="py-1">
                 {row.name} ({row.avgTop.toFixed(2)}&nbsp;kW ×{" "}
-                {(row.feePerKW * vatFactor).toFixed(2)}&nbsp;{model.currency}&nbsp;/&nbsp;kW)
+                {(row.feePerKW * vatFactor).toFixed(2)}&nbsp;{model.currency}
+                &nbsp;/&nbsp;kW)
               </td>
               <td className="py-1 text-right">
                 {row.fee.toFixed(2)}&nbsp;{model.currency}
@@ -82,19 +91,7 @@ export default function CostBreakdown({
             </tr>
           ))}
           <tr className="border-b border-gray-200">
-            <td className="py-1">
-              Electricity tax ({totalUsage.toFixed(2)}&nbsp;kWh ×{" "}
-              {(model.usageTaxPerKWh * vatFactor).toFixed(2)}&nbsp;
-              {model.currency}&nbsp;/&nbsp;kWh)
-            </td>
-            <td className="py-1 text-right">
-              {usageTax.toFixed(2)}&nbsp;{model.currency}
-            </td>
-          </tr>
-          <tr className="border-b border-gray-200">
-            <td className="py-1">
-              VAT ({(model.vatRate * 100).toFixed(1)}%)
-            </td>
+            <td className="py-1">VAT ({(model.vatRate * 100).toFixed(1)}%)</td>
             <td className="py-1 text-right">
               {vat.toFixed(2)}&nbsp;{model.currency}
             </td>

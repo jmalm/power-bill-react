@@ -1,0 +1,71 @@
+{
+  "name": "Tekniska verken, 20 A",
+  "currency": "kr",
+  "vat_rate": 0.25,
+  "prices_include_tax": true,
+  "fixed_fee_per_month": 220,
+  "usage_fees": [
+    {
+      "name": "Överföringsavgift, dag",
+      "fee_per_kw": 0.173,
+      "time_limits": {
+        "start_time": "06:00",
+        "end_time": "23:00"
+      }
+    },
+    {
+      "name": "Överföringsavgift, natt",
+      "fee_per_kw": 0.087,
+      "time_limits": {
+        "start_time": "23:00",
+        "end_time": "06:00"
+      }
+    },
+    {
+      "name": "Elskatt",
+      "fee_per_kw": 0.5488
+    }
+  ],
+  "power_tariffs": [
+    {
+      "name": "Effektavgift, natt, sommar",
+      "fee_per_kw": 8,
+      "number_of_top_peaks_to_average": 5,
+      "time_limits": {
+        "start_time": "23:00",
+        "end_time": "06:00",
+        "months": [4, 5, 6, 7, 8, 9, 10]
+      }
+    },
+    {
+      "name": "Effektavgift, dag, sommar",
+      "fee_per_kw": 22,
+      "number_of_top_peaks_to_average": 5,
+      "time_limits": {
+        "start_time": "06:00",
+        "end_time": "23:00",
+        "months": [4, 5, 6, 7, 8, 9, 10]
+      }
+    },
+    {
+      "name": "Effektavgift, natt, vinter",
+      "fee_per_kw": 12,
+      "number_of_top_peaks_to_average": 5,
+      "time_limits": {
+        "start_time": "23:00",
+        "end_time": "06:00",
+        "months": [11, 12, 1, 2, 3]
+      }
+    },
+    {
+      "name": "Effektavgift, dag, vinter",
+      "fee_per_kw": 43,
+      "number_of_top_peaks_to_average": 5,
+      "time_limits": {
+        "start_time": "06:00",
+        "end_time": "23:00",
+        "months": [11, 12, 1, 2, 3]
+      }
+    }
+  ]
+}

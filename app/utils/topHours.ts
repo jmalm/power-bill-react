@@ -1,4 +1,4 @@
-import { PriceModel, PowerTariff, PowerTariffReduction } from "../models";
+import { PriceModel, PowerTariff, PowerTariffReduction, TimeLimits } from "../models";
 import { UsageRow } from "./csv";
 
 interface TopHoursResult {
@@ -27,16 +27,25 @@ function parseTimeString(time: string | undefined): number | undefined {
   return h + (m || 0) / 60;
 }
 
-function isWithinTariffMonth(date: Date, tariff: PowerTariff): boolean {
-  if (!tariff.timeLimits?.months || tariff.timeLimits.months.length === 0) return true;
-  return tariff.timeLimits.months.includes(date.getMonth() + 1); // JS months: 0-11, your config: 1-12
+function isWithinTimeLimits(
+  date: Date,
+  timeLimits: TimeLimits | undefined
+): boolean {
+  if (!timeLimits) return true;
+  if (!isWithinMonth(date, timeLimits)) return false;
+  const hour = date.getHours();
+  return isWithinTime(hour, timeLimits);
 }
 
-function isWithinTariffTime(hour: number, tariff: PowerTariff): boolean {
-  if (!tariff.timeLimits
-    || !tariff.timeLimits.startTime || !tariff.timeLimits.endTime) return true;
-  const start = parseTimeString(tariff.timeLimits.startTime) ?? 0;
-  const end = parseTimeString(tariff.timeLimits.endTime) ?? 24;
+function isWithinMonth(date: Date, timeLimits: TimeLimits | undefined): boolean {
+  if (!timeLimits?.months || timeLimits.months.length === 0) return true;
+  return timeLimits.months.includes(date.getMonth() + 1); // JS months: 0-11, your config: 1-12
+}
+
+function isWithinTime(hour: number, timeLimits: TimeLimits | undefined): boolean {
+  if (!timeLimits || !timeLimits.startTime || !timeLimits.endTime) return true;
+  const start = parseTimeString(timeLimits.startTime) ?? 0;
+  const end = parseTimeString(timeLimits.endTime) ?? 24;
   // If end < start, treat as overnight
   if (start < end) {
     return hour >= start && hour < end;
@@ -66,7 +75,7 @@ function getTopHourPerDay(
   let topUsage = -Infinity;
   for (let hour = 0; hour < 24; hour++) {
     // Only consider hours within the tariff's time window
-    if (!isWithinTariffTime(hour, tariff)) continue;
+    if (!isWithinTime(hour, tariff.timeLimits)) continue;
     let usage = usageByDayHour[hour] || 0;
     // Night reduction if needed (optional, not in your prompt)
     if (tariff.reduction && isWithinReduction(hour, tariff.reduction)) {
@@ -86,7 +95,7 @@ function getAllTopHoursForTariff(
   const topHours: number[] = [];
   for (const day in usageByDayHour) {
     const dateObj = new Date(day);
-    if (!isWithinTariffMonth(dateObj, tariff)) continue;
+    if (!isWithinMonth(dateObj, tariff.timeLimits)) continue;
     const topHour = getTopHourPerDay(usageByDayHour[day], day, tariff);
     topHours.push(topHour);
   }
@@ -116,4 +125,20 @@ export function calculateTopHoursPerTariff(
   }
 
   return result;
+}
+
+export function calculateTotalUsagePerFee(
+  usageData: UsageRow[],
+  model: PriceModel
+): Record<string, number> {
+  const totalUsagePerFee: Record<string, number> = {};
+  for (const usageFee of model.usageFees) {
+    totalUsagePerFee[usageFee.name] = 0;
+    for (const row of usageData) {
+      const dateObj = new Date(row.datetime);
+      if (!isWithinTimeLimits(dateObj, usageFee.timeLimits)) continue;
+      totalUsagePerFee[usageFee.name] += row.usage;
+    }
+  }
+  return totalUsagePerFee;
 }
