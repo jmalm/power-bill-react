@@ -4,8 +4,16 @@
   "vat_rate": 0.25,
   "prices_include_tax": true,
   "fixed_fee_per_month": 351,
-  "usage_fee_per_kwh": 0.0608,
-  "usage_tax_per_kwh": 0.5488,
+  "usage_fees": [
+    {
+      "name": "Överföringsavgift",
+      "fee_per_kw": 0.0608
+    },
+    {
+      "name": "Elskatt",
+      "fee_per_kw": 0.5488
+    }
+  ],
   "power_tariffs": [
     {
       "name": "Baslast",
