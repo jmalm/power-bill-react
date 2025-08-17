@@ -9,6 +9,7 @@ export function mapPriceModel(json: any): PriceModel {
     fixedFeePerMonth: json.fixed_fee_per_month,
     usageFees: json.usage_fees?.map(mapUsageFee) || [],
     powerTariffs: json.power_tariffs?.map(mapPowerTariff) || [],
+    url: json.url || undefined,
   };
 }
 

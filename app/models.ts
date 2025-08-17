@@ -9,6 +9,7 @@ export interface PriceModel {
   fixedFeePerMonth: number;
   usageFees: UsageFee[];
   powerTariffs: PowerTariff[];
+  url?: string;
 }
 
 export interface UsageFee {

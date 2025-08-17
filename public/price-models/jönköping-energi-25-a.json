@@ -4,6 +4,7 @@
   "vat_rate": 0.25,
   "prices_include_tax": true,
   "fixed_fee_per_month": 420,
+  "url": "https://jonkopingenergi.se/privat/elnat/elnat/priser",
   "usage_fees": [
     {
       "name": "Överföringsavgift",

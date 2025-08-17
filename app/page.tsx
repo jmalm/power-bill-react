@@ -138,8 +138,11 @@ export default function Home() {
             </p>
             <p className="mb-4">
               2. Upload a CSV file containing your electricity usage data. The
-              CSV should have two columns: `timestamp` (e.g., YYYY-MM-DD
-              HH:MM:SS) and `usage` (in kWh).
+              CSV should contain electricity usage per hour, and have two columns:{" "}
+              <span style={{ fontFamily: "monospace" }}>timestamp</span>{" "}
+              (the start of the hour, in YYYY-MM-DD HH:MM format), and{" "}
+              <span style={{ fontFamily: "monospace" }}>usage</span>{" "}
+              (electricity usage during the following hour, in kWh).
             </p>
             <p className="">
               3. The cost breakdown will automatically update based on your

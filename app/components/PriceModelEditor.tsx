@@ -88,6 +88,18 @@ export default function PriceModelEditor({
         />
       </div>
 
+      <div>
+        <label className="block text-sm">Source URL (optional)</label>
+        <input
+          className="block w-full p-2 bg-white rounded"
+          name="url"
+          type="url"
+          placeholder="https://example.com/pricing"
+          value={model.url || ''}
+          onChange={handleFieldChange}
+        />
+      </div>
+
       {/* Usage fees */}
       <h3 className="text-lg font-semibold mt-4">Usage fees</h3>
       {model.usageFees.map((usageFee, index) => (
