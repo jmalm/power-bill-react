@@ -4,6 +4,7 @@
   "vat_rate": 0.25,
   "prices_include_tax": true,
   "fixed_fee_per_month": 220,
+  "url": "https://www.tekniskaverken.se/kundservice/priser-avtal/priser-elnat-2025/",
   "usage_fees": [
     {
       "name": "Överföringsavgift, dag",
