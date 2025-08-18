@@ -109,7 +109,7 @@ export default function Home() {
           <div className="bg-gray-50 p-6 rounded-lg shadow-lg">
             <h2 className="text-xl font-semibold mb-4">Usage Data</h2>
             <div className="mb-4">
-              <CsvUploader onUpload={setUsageData} />
+              <CsvUploader setUsageData={setUsageData} />
             </div>
           </div>
 

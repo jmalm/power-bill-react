@@ -12,6 +12,7 @@
     "deploy": "cross-env NODE_ENV=production NEXT_PUBLIC_BASE_PATH=/power-bill-react next build && gh-pages -d out --nojekyll"
   },
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
     "next": "15.4.5",
     "react": "19.1.0",
     "react-dom": "19.1.0"

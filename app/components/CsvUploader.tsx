@@ -2,17 +2,20 @@
 
 import React, { useState } from 'react';
 import { UsageRow } from '../utils/csv';
+import RawFileViewer from './RawFileViewer';
 
 interface CsvUploaderProps {
-  onUpload: (data: UsageRow[]) => void;
+  setUsageData: (data: UsageRow[]) => void;
   disabled?: boolean;
 }
 
-export default function CsvUploader({ onUpload, disabled = false }: CsvUploaderProps) {
+export default function CsvUploader({ setUsageData, disabled = false }: CsvUploaderProps) {
   const [error, setError] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [fileName, setFileName] = useState<string | null>(null);
   const [data, setData] = useState<UsageRow[] | null>(null);
+  const [fileContent, setFileContent] = useState<string>('');
+  const [showRawContent, setShowRawContent] = useState(false);
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -21,24 +24,35 @@ export default function CsvUploader({ onUpload, disabled = false }: CsvUploaderP
     setIsUploading(true);
     setError(null);
     setFileName(file.name);
+    setShowRawContent(false);
 
     try {
       const text = await file.text();
-      const { parseUsageCsv } = await import('../utils/csv');
-      const parsed = parseUsageCsv(text);
+      setFileContent(text);
       
-      if (parsed.length < 2) {
-        throw new Error('CSV must contain at least 2 data points');
+      try {
+        const { parseUsageCsv } = await import('../utils/csv');
+        const parsed = parseUsageCsv(text);
+        
+        if (parsed.length < 2) {
+          throw new Error('CSV must contain at least 2 data points');
+        }
+        
+        setData(parsed);
+        setUsageData(parsed);
+      } catch (parseError) {
+        console.error('Error parsing CSV:', parseError);
+        setError(parseError instanceof Error ? parseError.message : 'Failed to parse CSV file');
+        // Don't re-throw, we want to continue and show the raw content
+        setData(null);
+        setUsageData([]);
       }
-      
-      setData(parsed);
-      onUpload(parsed);
     } catch (err) {
-      console.error('Error processing CSV:', err);
-      setError(err instanceof Error ? err.message : 'Failed to process CSV file');
+      console.error('Error reading file:', err);
+      setError(err instanceof Error ? err.message : 'Failed to read file');
     } finally {
       setIsUploading(false);
-      // Reset the input to allow re-uploading the same file if there was an error
+      // Reset the input to allow re-uploading the same file if needed
       event.target.value = '';
     }
   };
@@ -47,6 +61,8 @@ export default function CsvUploader({ onUpload, disabled = false }: CsvUploaderP
     setError(null);
     setFileName(null);
     setData(null);
+    setUsageData([]);
+    setFileContent('');
   };
 
   return (
@@ -94,9 +110,20 @@ export default function CsvUploader({ onUpload, disabled = false }: CsvUploaderP
         </div>
       )}
 
-      {fileName && !error && !isUploading && (
-        <div className="mt-2 text-sm text-green-700">
-          Successfully loaded {data?.length} data points
+      {fileName && !isUploading && (
+        <div className="mt-2">
+          <div className="text-sm text-green-700 mb-2">
+            Successfully loaded {data?.length} data points
+          </div>
+          <button
+            onClick={() => setShowRawContent(!showRawContent)}
+            className="text-xs text-blue-600 hover:text-blue-800 focus:outline-none"
+          >
+            {showRawContent ? 'Hide' : 'Show'} raw file content
+          </button>
+          {showRawContent && fileContent && (
+            <RawFileViewer content={fileContent} />
+          )}
         </div>
       )}
     </div>
