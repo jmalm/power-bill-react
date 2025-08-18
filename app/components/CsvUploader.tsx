@@ -6,14 +6,14 @@ import RawFileViewer from './RawFileViewer';
 
 interface CsvUploaderProps {
   setUsageData: (data: UsageRow[]) => void;
+  usageData: UsageRow[] | null;
   disabled?: boolean;
 }
 
-export default function CsvUploader({ setUsageData, disabled = false }: CsvUploaderProps) {
+export default function CsvUploader({ setUsageData, usageData, disabled = false }: CsvUploaderProps) {
   const [error, setError] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [fileName, setFileName] = useState<string | null>(null);
-  const [data, setData] = useState<UsageRow[] | null>(null);
   const [fileContent, setFileContent] = useState<string>('');
   const [showRawContent, setShowRawContent] = useState(false);
 
@@ -38,18 +38,16 @@ export default function CsvUploader({ setUsageData, disabled = false }: CsvUploa
           throw new Error('CSV must contain at least 2 data points');
         }
         
-        setData(parsed);
         setUsageData(parsed);
       } catch (parseError) {
         console.error('Error parsing CSV:', parseError);
         setError(parseError instanceof Error ? parseError.message : 'Failed to parse CSV file');
-        // Don't re-throw, we want to continue and show the raw content
-        setData(null);
         setUsageData([]);
       }
     } catch (err) {
       console.error('Error reading file:', err);
       setError(err instanceof Error ? err.message : 'Failed to read file');
+      setUsageData([]);
     } finally {
       setIsUploading(false);
       // Reset the input to allow re-uploading the same file if needed
@@ -60,7 +58,6 @@ export default function CsvUploader({ setUsageData, disabled = false }: CsvUploa
   const handleDismissError = () => {
     setError(null);
     setFileName(null);
-    setData(null);
     setUsageData([]);
     setFileContent('');
   };
@@ -113,7 +110,7 @@ export default function CsvUploader({ setUsageData, disabled = false }: CsvUploa
       {fileName && !isUploading && (
         <div className="mt-2">
           <div className="text-sm text-green-700 mb-2">
-            Successfully loaded {data?.length} data points
+            Successfully loaded {usageData?.length} data points
           </div>
           <button
             onClick={() => setShowRawContent(!showRawContent)}
