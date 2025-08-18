@@ -113,15 +113,15 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="bg-gray-50 p-6 rounded-lg shadow-lg mt-8">
-            {selected && usageData.length > 0 && (
+          {selected && usageData.length > 0 && (
+            <div className="bg-gray-50 p-6 rounded-lg shadow-lg mt-8">
               <CostBreakdown
                 model={selected}
                 totalUsagePerFee={totalUsagePerFee}
                 topHoursPerTariff={topHoursPerTariff}
               />
-            )}
-          </div>
+            </div>
+          )}
         </div>
 
         {/* Third Column: Help/Information */}
