@@ -99,27 +99,3 @@ export function parseUsageCsv(text: string): UsageRow[] {
   
   return data;
 }
-
-export function handleCsvUpload(
-  event: React.ChangeEvent<HTMLInputElement>,
-  setUsageData: (rows: UsageRow[]) => void
-) {
-  const file = event.target.files?.[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    const text = e.target?.result as string;
-
-    try {
-      const parsed = parseUsageCsv(text);
-      if (parsed.length < 2) {
-        throw new Error('CSV must contain at least 2 data points');
-      }
-      setUsageData(parsed);
-    } catch (error) {
-      console.error('Error parsing CSV:', error);
-      console.log('CSV content (first 1000 chars):', text.substring(0, 1000));
-    }
-  };
-  reader.readAsText(file);
-}

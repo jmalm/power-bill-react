@@ -8,7 +8,8 @@ import { PriceModel } from "./models";
 import { loadPriceModels } from "./utils/priceModelLoader";
 import { downloadJson } from "./utils/downloadJson";
 import CostBreakdown from "./components/CostBreakdown";
-import { handleCsvUpload, UsageRow } from "./utils/csv";
+import { UsageRow } from "./utils/csv";
+import CsvUploader from "./components/CsvUploader";
 import {
   calculateTopHoursPerTariff,
   calculateTotalUsagePerFee,
@@ -35,6 +36,10 @@ export default function Home() {
   useEffect(() => {
     setEditingModel(selected ? { ...selected } : null);
   }, [selected]);
+
+  const handleCsvUpload = (data: UsageRow[]) => {
+    setUsageData(data);
+  };
 
   // Calculate total usage from the loaded data
   const totalUsage = usageData.reduce((sum, row) => sum + row.usage, 0);
@@ -103,22 +108,12 @@ export default function Home() {
         <div>
           <div className="bg-gray-50 p-6 rounded-lg shadow-lg">
             <h2 className="text-xl font-semibold mb-4">Usage Data</h2>
-            <div>
-              <label className="block mb-2 font-medium">Upload usage CSV</label>
-              <input
-                type="file"
-                accept=".csv,text/csv"
-                onChange={(e) => handleCsvUpload(e, setUsageData)}
-                className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-              />
-              {usageData.length > 0 && (
-                <div className="mt-2 text-sm text-green-400">
-                  Loaded {usageData.length} usage rows. Total:{" "}
-                  {totalUsage.toFixed(2)} kWh
-                </div>
-              )}
+            <div className="mb-4">
+              <CsvUploader onUpload={setUsageData} />
             </div>
+          </div>
 
+          <div className="bg-gray-50 p-6 rounded-lg shadow-lg mt-8">
             {selected && usageData.length > 0 && (
               <CostBreakdown
                 model={selected}

@@ -57,7 +57,7 @@ export default function CostBreakdown({
   const total = subtotal + vat;
 
   return (
-    <div className="mt-8 md:p-4 md:bg-white md:rounded md:shadow text-gray-900">
+    <div className="w-full text-gray-900">
       <h2 className="text-xl font-semibold mb-4">Cost Breakdown</h2>
       <table className="w-full text-left table-auto">
         <tbody>
