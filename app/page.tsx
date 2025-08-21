@@ -133,7 +133,7 @@ export default function Home() {
             </p>
             <p className="mb-4">
               2. Upload a CSV file containing your electricity usage data. The
-              CSV should contain electricity usage per hour, and have two columns:{" "}
+              CSV should contain electricity usage <em>per hour</em>, and have two columns:{" "}
               <span style={{ fontFamily: "monospace" }}>timestamp</span>{" "}
               (the start of the hour, in YYYY-MM-DD HH:MM format), and{" "}
               <span style={{ fontFamily: "monospace" }}>usage</span>{" "}
@@ -167,6 +167,46 @@ export default function Home() {
                 .
               </li>
             </ol>
+
+            <h2 className="text-xl font-semibold mt-6 mb-4">
+              CSV file doesn't load correctly?
+            </h2>
+            <p className="mb-4">
+              If you're having trouble loading your CSV file, please ensure that
+              it follows the correct format:
+            </p>
+            <ul className="list-disc list-inside mb-4">
+              <li>
+                The first row should contain the headers:{" "}
+                <span style={{ fontFamily: "monospace" }}>timestamp</span>{" "}
+                and{" "}
+                <span style={{ fontFamily: "monospace" }}>usage</span>.
+              </li>
+              <li>
+                Timestamps must be in{" "}
+                <span style={{ fontFamily: "monospace" }}>
+                  YYYY-MM-DD HH:MM
+                </span>{" "}
+                format.
+              </li>
+              <li>
+                Ensure there are no empty rows or columns in the CSV file.
+              </li>
+            </ul>
+            <p className="mt-4">
+              If you would like the app to support your CSV file format, please
+              open an issue on{" "}
+              <a
+                href="https://github.com/jmalm/power-bill-react/issues"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-500 hover:underline"
+              >
+                GitHub
+              </a>
+              . Include a sample of your CSV file, and I will try to add
+              support for it.
+            </p>
           </div>
         </div>
       </div>
@@ -182,6 +222,16 @@ export default function Home() {
           >
             Jakob Malm
           </a>
+          . This project is open source and available on{" "}
+          <a
+            href="https://github.com/jmalm/power-bill-react"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-500 hover:underline"
+          >
+            GitHub
+          </a>
+          .
         </p>
       </footer>
     </main>
