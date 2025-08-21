@@ -13,24 +13,34 @@ describe("calculateTopHoursPerTariff", () => {
       vatRate: 0.25,
       pricesIncludeVat: true,
       fixedFeePerMonth: 100,
-      usageFeePerKWh: 1,
-      usageTaxPerKWh: 0.5,
+      usageFees: [
+        {
+          name: "Transfer Fee",
+          feePerKWh: 1,
+        },
+        {
+          name: "Tax",
+          feePerKWh: 0.5,
+        }
+      ],
       powerTariffs: [
         {
           name: "TestTariff",
           feePerKW: 10,
           numberOfTopPeaksToAverage: 2,
-          months: [],
-          startTime: "00:00",
-          endTime: "24:00",
+          timeLimits: {
+            months: [],
+            startTime: "00:00",
+            endTime: "24:00",
+          }
         },
       ],
     };
     const usage: UsageRow[] = [
-      { datetime: "2024-01-01T00:00", usage: 2 },
-      { datetime: "2024-01-01T01:00", usage: 5 },
-      { datetime: "2024-01-02T00:00", usage: 3 },
-      { datetime: "2024-01-02T01:00", usage: 7 },
+      { datetime: new Date("2024-01-01T00:00"), usage: 2 },
+      { datetime: new Date("2024-01-01T01:00"), usage: 5 },
+      { datetime: new Date("2024-01-02T00:00"), usage: 3 },
+      { datetime: new Date("2024-01-02T01:00"), usage: 7 },
     ];
     const result = calculateTopHoursPerTariff(usage, model);
     expect(result["TestTariff"]).toBe((5 + 7) / 2);

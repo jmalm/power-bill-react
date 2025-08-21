@@ -57,10 +57,9 @@ function isWithinTime(hour: number, timeLimits: TimeLimits | undefined): boolean
 function groupUsageByDayHour(usageData: UsageRow[]) {
   const usageByDayHour: { [date: string]: { [hour: number]: number } } = {};
   usageData.forEach(({ datetime, usage }) => {
-    const dateObj = new Date(datetime);
-    if (isNaN(dateObj.getTime())) return;
-    const day = dateObj.toISOString().slice(0, 10); // YYYY-MM-DD
-    const hour = dateObj.getHours();
+    if (isNaN(datetime.getTime())) return;
+    const day = datetime.toISOString().slice(0, 10); // YYYY-MM-DD
+    const hour = datetime.getHours();
     if (!usageByDayHour[day]) usageByDayHour[day] = {};
     usageByDayHour[day][hour] = (usageByDayHour[day][hour] || 0) + usage;
   });
@@ -135,8 +134,7 @@ export function calculateTotalUsagePerFee(
   for (const usageFee of model.usageFees) {
     totalUsagePerFee[usageFee.name] = 0;
     for (const row of usageData) {
-      const dateObj = new Date(row.datetime);
-      if (!isWithinTimeLimits(dateObj, usageFee.timeLimits)) continue;
+      if (!isWithinTimeLimits(row.datetime, usageFee.timeLimits)) continue;
       totalUsagePerFee[usageFee.name] += row.usage;
     }
   }

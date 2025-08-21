@@ -1,4 +1,10 @@
-import { PriceModel, PowerTariff, TimeLimits, PowerTariffReduction, UsageFee } from "../models";
+import {
+  PriceModel,
+  PowerTariff,
+  TimeLimits,
+  PowerTariffReduction,
+  UsageFee,
+} from "../models";
 
 export function mapPriceModel(json: any): PriceModel {
   return {
@@ -16,7 +22,7 @@ export function mapPriceModel(json: any): PriceModel {
 function mapUsageFee(json: any): UsageFee {
   return {
     name: json.name,
-    feePerKW: json.fee_per_kw,
+    feePerKWh: json.fee_per_kw,
     timeLimits: json.time_limits ? mapTimeLimits(json.time_limits) : undefined,
   };
 }
@@ -27,9 +33,7 @@ function mapPowerTariff(json: any): PowerTariff {
     feePerKW: json.fee_per_kw,
     numberOfTopPeaksToAverage: json.number_of_top_peaks_to_average,
     timeLimits: json.time_limits ? mapTimeLimits(json.time_limits) : undefined,
-    reduction: json.reduction
-      ? mapNightReduction(json.reduction)
-      : undefined,
+    reduction: json.reduction ? mapNightReduction(json.reduction) : undefined,
   };
 }
 

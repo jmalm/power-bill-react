@@ -19,7 +19,7 @@ export default function CostBreakdown({
 
   // Usage fees
   const usageFeeRows = model.usageFees.map((fee) => {
-    const feePerKW = fee.feePerKW * vatFactor;
+    const feePerKW = fee.feePerKWh * vatFactor;
     const totalUsage = totalUsagePerFee[fee.name] || 0;
     const usageFee = totalUsage * feePerKW;
     return {
@@ -67,29 +67,37 @@ export default function CostBreakdown({
               {fixedFee.toFixed(2)}&nbsp;{model.currency}
             </td>
           </tr>
-          {usageFeeRows.map((row) => row.totalUsage > 0 && (
-            <tr className="border-b border-gray-200" key={row.name}>
-              <td className="py-1">
-                {row.name} ({row.totalUsage.toFixed(2)}&nbsp;kWh ×{" "}
-                {row.feePerKW.toFixed(2)}&nbsp;{model.currency}&nbsp;/&nbsp;kWh)
-              </td>
-              <td className="py-1 text-right">
-                {row.fee.toFixed(2)}&nbsp;{model.currency}
-              </td>
-            </tr>
-          ))}
-          {powerTariffRows.map((row) => row.avgTop > 0 && (
-            <tr className="border-b border-gray-200" key={row.name}>
-              <td className="py-1">
-                {row.name} ({row.avgTop.toFixed(2)}&nbsp;kW ×{" "}
-                {(row.feePerKW * vatFactor).toFixed(2)}&nbsp;{model.currency}
-                &nbsp;/&nbsp;kW)
-              </td>
-              <td className="py-1 text-right">
-                {row.fee.toFixed(2)}&nbsp;{model.currency}
-              </td>
-            </tr>
-          ))}
+          {usageFeeRows.map(
+            (row) =>
+              row.totalUsage > 0 && (
+                <tr className="border-b border-gray-200" key={row.name}>
+                  <td className="py-1">
+                    {row.name} ({row.totalUsage.toFixed(2)}&nbsp;kWh ×{" "}
+                    {row.feePerKW.toFixed(2)}&nbsp;{model.currency}
+                    &nbsp;/&nbsp;kWh)
+                  </td>
+                  <td className="py-1 text-right">
+                    {row.fee.toFixed(2)}&nbsp;{model.currency}
+                  </td>
+                </tr>
+              )
+          )}
+          {powerTariffRows.map(
+            (row) =>
+              row.avgTop > 0 && (
+                <tr className="border-b border-gray-200" key={row.name}>
+                  <td className="py-1">
+                    {row.name} ({row.avgTop.toFixed(2)}&nbsp;kW ×{" "}
+                    {(row.feePerKW * vatFactor).toFixed(2)}&nbsp;
+                    {model.currency}
+                    &nbsp;/&nbsp;kW)
+                  </td>
+                  <td className="py-1 text-right">
+                    {row.fee.toFixed(2)}&nbsp;{model.currency}
+                  </td>
+                </tr>
+              )
+          )}
           <tr className="border-b border-gray-200">
             <td className="py-1">VAT ({(model.vatRate * 100).toFixed(1)}%)</td>
             <td className="py-1 text-right">

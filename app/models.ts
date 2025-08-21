@@ -14,7 +14,7 @@ export interface PriceModel {
 
 export interface UsageFee {
   name: string;
-  feePerKW: number;
+  feePerKWh: number;
   timeLimits?: TimeLimits;
 }
 

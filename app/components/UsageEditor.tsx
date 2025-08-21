@@ -18,26 +18,26 @@ export default function UsageEditor({ usageFee, onChange }: UsageEditorProps) {
 
   return (
     <div className="space-y-2">
-          <div>
-            <label className="block text-sm">Fee name</label>
-            <input
-              className="block w-full p-2 bg-white rounded"
-              name={`name`}
-              value={usageFee.name}
-              onChange={handleFieldChange}
-            />
-          </div>
-          <div>
-            <label className="block text-sm">Fee per kWh</label>
-            <input
-              className="block w-full p-2 bg-white rounded"
-              name={`feePerKW`}
-              type="number"
-              value={usageFee.feePerKW}
-              onChange={handleFieldChange}
-            />
-          </div>
-          {usageFee.timeLimits ? (
+      <div>
+        <label className="block text-sm">Fee name</label>
+        <input
+          className="block w-full p-2 bg-white rounded"
+          name={`name`}
+          value={usageFee.name}
+          onChange={handleFieldChange}
+        />
+      </div>
+      <div>
+        <label className="block text-sm">Fee per kWh</label>
+        <input
+          className="block w-full p-2 bg-white rounded"
+          name={`feePerKW`}
+          type="number"
+          value={usageFee.feePerKWh}
+          onChange={handleFieldChange}
+        />
+      </div>
+      {usageFee.timeLimits ? (
         <>
           <div>
             <label className="block text-sm">Start time</label>
@@ -89,7 +89,10 @@ export default function UsageEditor({ usageFee, onChange }: UsageEditorProps) {
                     .filter((n) => !isNaN(n));
                   onChange({
                     ...usageFee,
-                    timeLimits: { ...usageFee.timeLimits!, months: monthsArray },
+                    timeLimits: {
+                      ...usageFee.timeLimits!,
+                      months: monthsArray,
+                    },
                   });
                 }}
               />

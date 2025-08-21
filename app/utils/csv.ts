@@ -1,5 +1,5 @@
 export interface UsageRow {
-  datetime: string;
+  datetime: Date;
   usage: number;
 }
 
@@ -77,25 +77,29 @@ export function parseUsageCsv(text: string): UsageRow[] {
     
     // Get the values
     let timestamp = parts[timestampCol].trim();
+    const datetime = new Date(timestamp);
     const usageStr = parts[usageCol].trim().replace(',', '.');
     const usage = parseFloat(usageStr) || 0;
     
-    // Verify that this timestamp is one hour after the previous timestamp
-    if (data.length > 0) {
-      const previousTimestamp = data[data.length - 1].datetime;
-      const previousDate = new Date(previousTimestamp);
-      const currentDate = new Date(timestamp);
-      const diffHours = (currentDate.getTime() - previousDate.getTime()) / (1000 * 60 * 60);
-      if (Math.abs(diffHours - 1) > 0.1) { // Allow small margin for DST changes
-        throw new Error(`Timestamps must be 1 hour apart, found ${diffHours} hours`);
-      }
-    }
-    
-    // Clean up timestamp (remove timezone if present)
-    timestamp = timestamp.replace(/[TZ].*$/, '');
-    
-    data.push({ datetime: timestamp, usage });
+    data.push({ datetime, usage });
   }
-  
+
+  // Verify that the data is valid. We expect at least 100 rows for meaningful analysis.
+  if (data.length < 100) {
+    throw new Error("Not enough data points. Please provide at least 100 rows of usage data.");
+  }
+  // Verify that the second timestamp is one hour after the first timestamp
+  const diffHours = (data[1].datetime.getTime() - data[0].datetime.getTime()) / 3600000;
+  if (Math.abs(diffHours - 1) > 0.01) { // Allow a small margin of error for time adjustments.
+    throw new Error("Invalid timestamp interval. Expected 1 hour between data points.");
+  }
+  // Verify that the timestamps cover approximately one month
+  const startDate = data[0].datetime;
+  const endDate = data[data.length - 1].datetime;
+  const diffDays = (endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24);
+  if (diffDays < 25 || diffDays > 35) {
+    throw new Error(`Invalid timestamp range. Expected approximately one month of data. Got ${diffDays.toFixed(0)} days.`);
+  }
+
   return data;
 }

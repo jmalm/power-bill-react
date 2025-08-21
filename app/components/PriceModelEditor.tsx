@@ -35,7 +35,6 @@ export default function PriceModelEditor({
 
   return (
     <form className="space-y-2">
-
       {/* Top-level fields */}
       <div>
         <label className="block text-sm">Name</label>
@@ -87,7 +86,6 @@ export default function PriceModelEditor({
           onChange={handleFieldChange}
         />
       </div>
-
       <div>
         <label className="block text-sm">Source URL (optional)</label>
         <input
@@ -95,11 +93,10 @@ export default function PriceModelEditor({
           name="url"
           type="url"
           placeholder="https://example.com/pricing"
-          value={model.url || ''}
+          value={model.url || ""}
           onChange={handleFieldChange}
         />
       </div>
-
       {/* Usage fees */}
       <h3 className="text-lg font-semibold mt-4">Usage fees</h3>
       {model.usageFees.map((usageFee, index) => (
@@ -132,7 +129,7 @@ export default function PriceModelEditor({
             ...model,
             usageFees: [
               ...model.usageFees,
-              { name: "", feePerKW: 0, timeLimits: undefined },
+              { name: "", feePerKWh: 0, timeLimits: undefined },
             ],
           })
         }
@@ -140,7 +137,6 @@ export default function PriceModelEditor({
       >
         Add Usage Fee
       </button>
-
       {/* Power tariffs */}{" "}
       <h3 className="text-lg font-semibold mt-4">Power tariffs</h3>
       {model.powerTariffs.map((tariff, index) => (
