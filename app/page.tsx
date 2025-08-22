@@ -1,15 +1,20 @@
 // app/page.tsx
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import PriceModelSelector from "./components/PriceModelSelector";
 import PriceModelEditor from "./components/PriceModelEditor";
 import { PriceModel } from "./models";
 import { loadPriceModels } from "./utils/priceModelLoader";
 import { downloadJson } from "./utils/downloadJson";
 import CostBreakdown from "./components/CostBreakdown";
-import { UsageRow } from "./utils/csv";
+import {
+  UsageRow,
+  getAvailableCompleteMonths,
+  filterDataByMonth,
+} from "./utils/csv";
 import CsvUploader from "./components/CsvUploader";
+import MonthSelector from "./components/MonthSelector";
 import {
   calculateTopHoursPerTariff,
   calculateTotalUsagePerFee,
@@ -23,7 +28,15 @@ export default function Home() {
   const [editingModel, setEditingModel] = useState<PriceModel | null>(null);
   const [showEditor, setShowEditor] = useState(false);
   const [usageData, setUsageData] = useState<UsageRow[]>([]);
+  const [availableMonths, setAvailableMonths] = useState<
+    { year: number; month: number }[]
+  >([]);
+  const [selectedMonth, setSelectedMonth] = useState<{
+    year: number;
+    month: number;
+  } | null>(null);
 
+  // Load price models on mount
   useEffect(() => {
     loadPriceModels().then((models) => {
       setPriceModels(models);
@@ -33,26 +46,67 @@ export default function Home() {
       }
     });
   }, []);
+
+  // Update editing model when selected model changes
   useEffect(() => {
     setEditingModel(selected ? { ...selected } : null);
   }, [selected]);
 
+  // Handle CSV upload and extract available months
   const handleCsvUpload = (data: UsageRow[]) => {
     setUsageData(data);
+    const months = getAvailableCompleteMonths(data);
+    setAvailableMonths(months);
+
+    // Set the most recent month as selected by default
+    if (months.length > 0) {
+      const latestMonth = [...months].sort((a, b) => {
+        if (a.year !== b.year) return b.year - a.year;
+        return b.month - a.month;
+      })[0];
+
+      setSelectedMonth(latestMonth);
+    } else {
+      setSelectedMonth(null);
+    }
   };
 
-  // Calculate total usage from the loaded data
-  const totalUsage = usageData.reduce((sum, row) => sum + row.usage, 0);
-  const totalUsagePerFee =
-    selected && usageData.length
-      ? calculateTotalUsagePerFee(usageData, selected)
-      : {};
+  // Filter data by selected month
+  const filteredData = useMemo(() => {
+    if (!selectedMonth || usageData.length === 0) return [];
+    return filterDataByMonth(
+      usageData,
+      selectedMonth.year,
+      selectedMonth.month
+    );
+  }, [usageData, selectedMonth]);
 
-  // Calculate top hours per tariff for CostBreakdown
-  const topHoursPerTariff =
-    selected && usageData.length
-      ? calculateTopHoursPerTariff(usageData, selected)
-      : {};
+  // Handle month selection change
+  const handleMonthChange = (year: number, month: number) => {
+    setSelectedMonth({ year, month });
+  };
+
+  // Calculate usage and costs using the filtered data
+  const totalUsage = useMemo(
+    () => filteredData.reduce((sum, row) => sum + row.usage, 0),
+    [filteredData]
+  );
+
+  const totalUsagePerFee = useMemo(
+    () =>
+      selected && filteredData.length > 0
+        ? calculateTotalUsagePerFee(filteredData, selected)
+        : {},
+    [selected, filteredData]
+  );
+
+  const topHoursPerTariff = useMemo(
+    () =>
+      selected && filteredData.length > 0
+        ? calculateTopHoursPerTariff(filteredData, selected)
+        : {},
+    [selected, filteredData]
+  );
 
   return (
     <main className="flex min-h-screen flex-col items-center p-4 md:p-24 w-full">
@@ -109,8 +163,21 @@ export default function Home() {
           <div className="bg-gray-50 p-6 rounded-lg shadow-lg">
             <h2 className="text-xl font-semibold mb-4">Usage Data</h2>
             <div className="mb-4">
-              <CsvUploader setUsageData={setUsageData} usageData={usageData} />
+              <CsvUploader
+                setUsageData={handleCsvUpload}
+                usageData={usageData}
+              />
             </div>
+
+            {availableMonths.length > 0 && selectedMonth && (
+              <div className="mt-4">
+                <MonthSelector
+                  months={availableMonths}
+                  selectedMonth={selectedMonth}
+                  onMonthChange={handleMonthChange}
+                />
+              </div>
+            )}
           </div>
 
           {selected && usageData.length > 0 && (
@@ -133,9 +200,10 @@ export default function Home() {
             </p>
             <p className="mb-4">
               2. Upload a CSV file containing your electricity usage data. The
-              CSV should contain electricity usage <em>per hour</em>, and have two columns:{" "}
-              <span style={{ fontFamily: "monospace" }}>timestamp</span>{" "}
-              (the start of the hour, in YYYY-MM-DD HH:MM format), and{" "}
+              CSV should contain electricity usage <em>per hour</em>, and have
+              two columns:{" "}
+              <span style={{ fontFamily: "monospace" }}>timestamp</span> (the
+              start of the hour, in YYYY-MM-DD HH:MM format), and{" "}
               <span style={{ fontFamily: "monospace" }}>usage</span>{" "}
               (electricity usage during the following hour, in kWh).
             </p>
@@ -178,8 +246,7 @@ export default function Home() {
             <ul className="list-disc list-inside mb-4">
               <li>
                 The first row should contain the headers:{" "}
-                <span style={{ fontFamily: "monospace" }}>timestamp</span>{" "}
-                and{" "}
+                <span style={{ fontFamily: "monospace" }}>timestamp</span> and{" "}
                 <span style={{ fontFamily: "monospace" }}>usage</span>.
               </li>
               <li>
@@ -204,8 +271,8 @@ export default function Home() {
               >
                 GitHub
               </a>
-              . Include a sample of your CSV file, and I will try to add
-              support for it.
+              . Include a sample of your CSV file, and I will try to add support
+              for it.
             </p>
           </div>
         </div>
